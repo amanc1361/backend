@@ -68,8 +68,9 @@ func (r *documentRepository) FindAll(search string, yearid uint, companyid int, 
 	go func(ch chan<- bool) {
 		defer close(ch)
 		if len(search) != 0 {
-			r.db.Model(&models.Document{}).Where(search).Where("year_id=? and company_id=?", yearid, companyid).Count(&totalrows)
-			r.db.Scopes(paginate.Paginate(totalrows, &pagination, r.db)).Where(search).Where("year_id=? and company_id=?", yearid, companyid).Find(&documents).Order("document_number")
+			r.db.Debug().Model(&models.Document{}).Joins(" Join document_rows on documents.id=document_rows.document_id ").Where(search).Where("year_id=? and company_id=?", yearid, companyid).Distinct().Find(&documents)
+			totalrows = int64(len(documents))
+			r.db.Debug().Scopes(paginate.Paginate(totalrows, &pagination, r.db)).Joins(" Join document_rows on documents.id=document_rows.document_id ").Where(search).Where("year_id=? and company_id=?", yearid, companyid).Distinct().Find(&documents).Order("document_number")
 			pagination.Rows = documents
 		} else {
 			r.db.Model(&models.Document{}).Where("year_id=? and company_id=?", yearid, companyid).Count(&totalrows)
@@ -186,12 +187,14 @@ func (r *documentRepository) FindByDocumentDescription(des string, yearid int, c
 
 	var err error
 	documents := []models.Document{}
+	fmt.Println("i am herer")
 
 	done := make(chan bool)
 
 	go func(ch chan<- bool) {
 		defer close(ch)
-		t := r.db.Model(&models.Document{}).Where("year_id=? and company_id=? and description like %?%", yearid, companyid, des).Preload("DocumentRows").Find(&documents)
+		t := r.db.Joins("Join document_rows on document.id=document_rows.document_id").Where("year_id=? and company_id=? and (documments.description like %?% or document_rows.description like %?%)", yearid, companyid, des, des).Find(&documents)
+		// t := r.db.Model(&models.Document{}).Where("year_id=? and company_id=? and description like %?%", yearid, companyid, des).Preload("DocumentRows").Find(&documents)
 		err = t.Error
 		if t.Error != nil {
 			ch <- false

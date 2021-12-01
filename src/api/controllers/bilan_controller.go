@@ -17,10 +17,14 @@ func GetBilans(w http.ResponseWriter, r *http.Request) {
 	var v = r.URL.Query()
 
 	modeltype, err := strconv.ParseInt(v.Get("modeltype"), 10, 32)
+	reportbase, err := strconv.ParseInt(v.Get("reportbase"), 10, 32)
+	parentid, err := strconv.ParseInt(v.Get("parentid"), 10, 32)
 	yearid, err := strconv.ParseInt(v.Get("yearid"), 10, 32)
 	companyid, err := strconv.ParseInt(v.Get("companyid"), 10, 32)
-	itemid, err := strconv.ParseInt(v.Get("itemid"), 10, 32)
-
+    docfrom, err := strconv.ParseInt(v.Get("docfrom"), 10, 32)
+	docto, err := strconv.ParseInt(v.Get("docto"), 10, 32)
+	solarfrom := v.Get("solarfrom")
+	solarto:=v.Get("solarto")
 	if err != nil {
 		responses.ERROR(w, http.StatusInternalServerError, errors.New("پارامترهای ورودی نادرست است"))
 		return
@@ -38,7 +42,7 @@ func GetBilans(w http.ResponseWriter, r *http.Request) {
 
 	func(bilanRepository repository.BilanRepository) {
 
-		bilans, err := bilanRepository.FindAll(int(modeltype), int(yearid), int(companyid), int(itemid))
+		bilans, err := bilanRepository.FindAll(int(reportbase), int(modeltype), int(companyid),int(yearid),int(parentid) , int(docfrom),int(docto),solarfrom,solarto)
 		if err != nil {
 			responses.ERROR(w, http.StatusUnprocessableEntity, err)
 			return

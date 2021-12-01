@@ -6,7 +6,7 @@ import (
 )
 
 type BilanRepository interface {
-	FindAll(int, int, int, int) ([]models.Bilan, error)
+	FindAll(int, int,int, int,int,int, int,string,string) ([]models.Bilan, error)
 	FindBySearch(int, int, int, string, int) ([]models.Bilan, error)
 	FindDetaildsById(int, int, int, int, int) ([]modelsout.Doc, error)
 	FindTaraz(bool, int, int, int, int, int, string, string, int, int) ([]modelsout.Taraz, error)

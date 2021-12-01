@@ -40,7 +40,7 @@ func (r *repositoryBilan) FindDetaildsById(tmodel int, yearid int, companyid int
 
 	return nil, err
 }
-func (r *repositoryBilan) FindAll(typemodel int, yearid int, companyid int, itemid int) ([]models.Bilan, error) {
+func (r *repositoryBilan) FindAll(reportbase int, typemodel int, companyid int, yearid int, parentid int, docfrom int, docto int, solarfrom string, solarto string) ([]models.Bilan, error) {
 
 	var err error
 	var result *gorm.DB
@@ -48,37 +48,8 @@ func (r *repositoryBilan) FindAll(typemodel int, yearid int, companyid int, item
 	done := make(chan bool)
 
 	go func(ch chan<- bool) {
-		switch typemodel {
-		case 1:
-			if itemid == 0 {
-				result = r.db.Raw("call getgroupbilan(?,?);", yearid, companyid).Scan(&bilans)
-			}
-		case 2:
-			if itemid == 0 {
-				result = r.db.Raw("call getledgerbilan(?,?);", yearid, companyid).Scan(&bilans)
-			} else {
-				result = r.db.Raw("call getledgerbilanbygroupid(?,?,?);", yearid, companyid, itemid).Scan(&bilans)
-			}
 
-		case 3:
-			if itemid == 0 {
-				result = r.db.Raw("call getsubledgerbilan(?,?);", yearid, companyid).Scan(&bilans)
-			} else {
-				result = r.db.Raw("call getsubledgerbilanbyledgerid(?,?,?);", yearid, companyid, itemid).Scan(&bilans)
-
-			}
-		case 4:
-			if itemid == 0 {
-				result = r.db.Raw("call getdetailedbilan(?,?);", yearid, companyid).Scan(&bilans)
-			} else {
-				result = r.db.Raw("call getdetailedbilanbysubledgerid(?,?,?);", yearid, companyid, itemid).Scan(&bilans)
-			}
-		case 5:
-			if itemid != 0 {
-				result = r.db.Raw("call getdetailedbilanbyledgerid(?,?,?);", yearid, companyid, itemid).Scan(&bilans)
-			}
-
-		}
+		result = r.db.Debug().Raw("call getbilans(?,?,?,?,?,?,?,?,?);", reportbase, typemodel, companyid, yearid, parentid, docfrom, docto, solarfrom, solarto).Scan(&bilans)
 
 		if result.Error != nil {
 			ch <- false
