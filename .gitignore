@@ -1,3 +1,2 @@
-.env
-.exe
-p1.exe
+/src/main/.env
+
