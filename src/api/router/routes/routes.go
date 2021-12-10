@@ -37,6 +37,7 @@ func Load() []Route {
 	routes = append(routes, storepersonRoutes...)
 	routes = append(routes, storepersonreciveRoutes...)
 	routes = append(routes, peopleRoutes...)
+	routes = append(routes, documentmergeroutes...)
 
 	return routes
 }

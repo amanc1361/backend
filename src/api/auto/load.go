@@ -29,7 +29,7 @@ func Load() {
 		&models.StorePersonRecive{},
 		&models.StoreAction{},
 		&models.StoreActionRow{},
-		&models.Unit{}, &models.Person{}, &models.UesrRelatedCompany{},
+		&models.Unit{}, &models.Person{}, &models.UesrRelatedCompany{}, &models.DocumentMerge{},
 	)
 
 	if err != nil {

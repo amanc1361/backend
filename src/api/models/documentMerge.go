@@ -14,6 +14,6 @@ type DocumentMerge struct {
 	Description    string
 	SolarFrom      string `json:"solar_from"`
 	SolarTo        string `json:"solar_to"`
-	DocFrom        string `json:"doc_from"`
-	DocTo          string `json:"doc_to"`
+	DocFrom        int    `json:"doc_from"`
+	DocTo          int    `json:"doc_to"`
 }
