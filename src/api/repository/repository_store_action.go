@@ -18,5 +18,6 @@ type StoreActionRepository interface {
 	GetKardex(companyid int, yearid int, id int) ([]modelsout.Kradex, error)
 	GetRemObject(companyid int, yearid int, id int) ([]modelsout.Remobject, error)
 	GetPriceObject(companyid int, yearid int, objectid int, solardate string) (float64, error)
-        GetStoreIdbyDocumentID(int)(int,int,error)
+	GetStoreIdbyDocumentID(int) (int, int, error)
+	GetAll(companyid int, yearid int, reporttype int) ([]models.StoreAc, error)
 }

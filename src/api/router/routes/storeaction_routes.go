@@ -79,6 +79,12 @@ var storeActionRoutes = []Route{
 		IsAuth:  true,
 	},
 	Route{
+		Uri:     "/storeactionact",
+		Method:  http.MethodPost,
+		Handler: controllers.GetStoreActionsAll,
+		IsAuth:  true,
+	},
+	Route{
 		Uri:     "/storeaction/{id}",
 		Method:  http.MethodDelete,
 		Handler: controllers.DeleteStoreAction,

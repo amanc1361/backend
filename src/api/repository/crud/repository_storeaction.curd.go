@@ -350,3 +350,23 @@ func (r *repositoryStoreActionCRUD) Delete(uid int32) (int64, error) {
 	return result.RowsAffected, nil
 
 }
+
+func (r *repositoryStoreActionCRUD) GetAll(companyid int, yearid int, typestore int) ([]models.StoreAc, error) {
+
+	var err error
+	storeactions := []models.StoreAc{}
+	done := make(chan bool)
+
+	go func(ch chan<- bool) {
+		err = r.db.Raw("call getstoreac(?,?,?)", companyid, yearid, typestore).Scan(&storeactions).Error
+		if err != nil {
+			ch <- false
+			return
+		}
+		ch <- true
+	}(done)
+	if channels.Ok(done) {
+		return storeactions, nil
+	}
+	return []models.StoreAc{}, err
+}

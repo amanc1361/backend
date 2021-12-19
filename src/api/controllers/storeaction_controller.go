@@ -414,3 +414,30 @@ func DeleteStoreAction(w http.ResponseWriter, r *http.Request) {
 		responses.JSON(w, http.StatusOK, storeaction)
 	}(repo)
 }
+
+func GetStoreActionsAll(w http.ResponseWriter, r *http.Request) {
+	var v = r.URL.Query()
+	companyid, err := strconv.ParseUint(v.Get("companyid"), 10, 32)
+	yearid, err := strconv.ParseUint(v.Get("yearid"), 10, 32)
+	reporttype, err := strconv.ParseUint(v.Get("reporttype"), 10, 32)
+	db, err := database.Connect()
+	sqlDB, err := db.DB()
+	defer sqlDB.Close()
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	repo := crud.NewRepositoryStoreActionCRUD(db)
+
+	func(storeactionRepository repository.StoreActionRepository) {
+
+		storeactions, err := storeactionRepository.GetAll(int(companyid), int(yearid), int(reporttype))
+		if err != nil {
+			responses.ERROR(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		responses.JSON(w, http.StatusOK, storeactions)
+	}(repo)
+}
