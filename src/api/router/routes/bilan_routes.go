@@ -60,4 +60,10 @@ var bilanRoutes = []Route{
 		Handler: controllers.GetArticles,
 		IsAuth:  true,
 	},
+	Route{
+		Uri:     "/bilan/csv",
+		Method:  http.MethodGet,
+		Handler: controllers.GetCsv,
+		IsAuth:  false,
+	},
 }

@@ -3,6 +3,7 @@ package crud
 import (
 	"back-account/src/api/models"
 	"back-account/src/api/utils/channels"
+	"errors"
 	"fmt"
 
 	"gorm.io/gorm"
@@ -27,7 +28,7 @@ func (r *repositoryPeopleCRUD) Save(People models.Person) (models.Person, error)
 	tx := r.db.Begin()
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Printf("error in herer")
+			fmt.Println("rollback called...........................")
 			tx.Rollback()
 		}
 	}()
@@ -39,10 +40,14 @@ func (r *repositoryPeopleCRUD) Save(People models.Person) (models.Person, error)
 			detailed.Name = People.Name
 		}
 		detailed.CompanyId = uint(People.CompanyID)
+
 		r1 := NewRepositoryDetailedCRUD(r.db)
-		detailed, err = r1.Save(detailed)
+		// detailed, err = r1.Save(detailed)
+		detailed.Code, err = r1.GetLastCode(int(detailed.CompanyId))
+		err = tx.Create(&detailed).Error
 
 		if err != nil {
+
 			tx.Rollback()
 			return models.Person{}, err
 
@@ -59,16 +64,17 @@ func (r *repositoryPeopleCRUD) Save(People models.Person) (models.Person, error)
 
 			ch <- false
 			tx.Rollback()
-			return
+
 		}
 		ch <- true
 
 	}(done)
 
 	if channels.Ok(done) {
+
 		return People, tx.Commit().Error
 	}
-	fmt.Printf("5")
+
 	return models.Person{}, err
 
 }
@@ -133,45 +139,84 @@ func (r *repositoryPeopleCRUD) FindById(uid uint32) (models.Person, error) {
 func (r *repositoryPeopleCRUD) Update(People models.Person) (int64, error) {
 
 	var result *gorm.DB
+	var err error
 	done := make(chan bool)
+	detailed := models.Detailed{}
+	tx := r.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if People.DetailedID != 0 {
+		if People.TypePeople != 2 {
+			detailed.Name = People.Name + " " + People.Family
+		} else {
+			detailed.Name = People.Name
+		}
+		detailed.ID = uint(People.DetailedID)
+		detailed.CompanyId = uint(People.CompanyID)
+		err := tx.Model(&models.Detailed{}).Where("id=?", detailed.ID).Update("name", detailed.Name).Error
+		if err != nil {
+			tx.Rollback()
+			return 0, err
+
+		}
+
+	}
+
 	go func(ch chan<- bool) {
 
-		result = r.db.Save(&People)
-
+		err = tx.Save(&People).Error
+		if err != nil {
+			tx.Rollback()
+			ch <- false
+		}
 		ch <- true
 
 	}(done)
 
 	if channels.Ok(done) {
-		if result.Error != nil {
-			return 0, result.Error
 
-		}
+		return result.RowsAffected, tx.Commit().Error
 	}
 
-	return result.RowsAffected, nil
+	return 0, err
 
 }
 
-func (r *repositoryPeopleCRUD) Delete(uid int32) (int64, error) {
+func (r *repositoryPeopleCRUD) Delete(peopleid int32, detailedid int32) (int64, error) {
 
-	var result *gorm.DB
+	var err error
 	done := make(chan bool)
+	var count int64
 	go func(ch chan<- bool) {
 
-		result = r.db.Where("id=?", uid).Delete(&models.Person{})
+		err = r.db.Model(&models.DocumentRows{}).Where("detailed_id=?", detailedid).Count(&count).Error
+		if err != nil {
+			ch <- false
 
-		ch <- true
+		}
+		if count == 0 {
+			err = r.db.Where("id=?", peopleid).Delete(&models.Person{}).Error
+			if err != nil {
+				ch <- false
+			}
+			ch <- true
+		} else {
+			err = errors.New("این شخص یا شرکت گردش مالی دارد")
+			ch <- false
+		}
 
 	}(done)
 
 	if channels.Ok(done) {
-		if result.Error != nil {
-			return 0, result.Error
 
-		}
+		return 1, nil
+
 	}
 
-	return result.RowsAffected, nil
+	return 0, err
 
 }

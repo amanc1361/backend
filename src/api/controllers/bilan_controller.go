@@ -6,6 +6,8 @@ import (
 	"back-account/src/api/repository"
 	"back-account/src/api/repository/crud"
 	"back-account/src/api/responses"
+	"bytes"
+	"encoding/csv"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
@@ -21,10 +23,10 @@ func GetBilans(w http.ResponseWriter, r *http.Request) {
 	parentid, err := strconv.ParseInt(v.Get("parentid"), 10, 32)
 	yearid, err := strconv.ParseInt(v.Get("yearid"), 10, 32)
 	companyid, err := strconv.ParseInt(v.Get("companyid"), 10, 32)
-    docfrom, err := strconv.ParseInt(v.Get("docfrom"), 10, 32)
+	docfrom, err := strconv.ParseInt(v.Get("docfrom"), 10, 32)
 	docto, err := strconv.ParseInt(v.Get("docto"), 10, 32)
 	solarfrom := v.Get("solarfrom")
-	solarto:=v.Get("solarto")
+	solarto := v.Get("solarto")
 	if err != nil {
 		responses.ERROR(w, http.StatusInternalServerError, errors.New("پارامترهای ورودی نادرست است"))
 		return
@@ -42,7 +44,7 @@ func GetBilans(w http.ResponseWriter, r *http.Request) {
 
 	func(bilanRepository repository.BilanRepository) {
 
-		bilans, err := bilanRepository.FindAll(int(reportbase), int(modeltype), int(companyid),int(yearid),int(parentid) , int(docfrom),int(docto),solarfrom,solarto)
+		bilans, err := bilanRepository.FindAll(int(reportbase), int(modeltype), int(companyid), int(yearid), int(parentid), int(docfrom), int(docto), solarfrom, solarto)
 		if err != nil {
 			responses.ERROR(w, http.StatusUnprocessableEntity, err)
 			return
@@ -83,6 +85,21 @@ func GetGroupBilans(w http.ResponseWriter, r *http.Request) {
 
 		responses.JSON(w, http.StatusOK, bilans)
 	}(repo)
+}
+
+func GetCsv(w http.ResponseWriter, r *http.Request) {
+	var csvStruct [][]string
+	csvStruct = [][]string{
+		{"name", "address", "phone"},
+		{"Ram", "Tokyo", "1236524"},
+		{"Shaym", "Beijing", "8575675484"},
+	}
+	b := new(bytes.Buffer)
+	w1 := csv.NewWriter(b)
+	w1.WriteAll(csvStruct)
+	w.Header().Set("Content-Type", "text/csv") // setting the content type header to text/csv
+	// w.Header().Set("Content-Disposition", "attachment;filename=TheCSVFileName.csv")
+	w.Write(b.Bytes())
 }
 
 func GetProfit(w http.ResponseWriter, r *http.Request) {

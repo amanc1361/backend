@@ -26,13 +26,13 @@ var peopleRoutes = []Route{
 		IsAuth:  true,
 	},
 	Route{
-		Uri:     "/people/{id}",
+		Uri:     "/people",
 		Method:  http.MethodPut,
 		Handler: controllers.UpdatePeople,
 		IsAuth:  true,
 	},
 	Route{
-		Uri:     "/people/{id}",
+		Uri:     "/people",
 		Method:  http.MethodDelete,
 		Handler: controllers.DeletePeople,
 		IsAuth:  true,

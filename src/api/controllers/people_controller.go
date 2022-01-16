@@ -153,9 +153,10 @@ func UpdatePeople(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeletePeople(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
+	var v = r.URL.Query()
+	peopleid, err := strconv.ParseUint(v.Get("id"), 10, 32)
+	detailedid, err := strconv.ParseUint(v.Get("detailedid"), 10, 32)
 
-	uid, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return
@@ -173,7 +174,7 @@ func DeletePeople(w http.ResponseWriter, r *http.Request) {
 
 	func(storepersonRepository repository.PeopleRepository) {
 
-		storeperson, err := storepersonRepository.Delete(int32(uid))
+		storeperson, err := storepersonRepository.Delete(int32(peopleid), int32(detailedid))
 		if err != nil {
 			responses.ERROR(w, http.StatusUnprocessableEntity, err)
 			return
