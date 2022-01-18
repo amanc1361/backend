@@ -262,5 +262,41 @@ func (r *repositoryBilan) GetArticles(companyid int, yearid int, reportbase int,
 	}
 
 	return nil, err
+}
+func (r *repositoryBilan) Getcsv(companyid int, yearid int, solarfrom string, solarto string) ([]models.DocumnetCsv, error) {
+	var err error
+	csv := []models.DocumnetCsv{}
+
+	done := make(chan bool)
+	go func(ch chan<- bool) {
+		err = r.db.Debug().Table("document_rows").
+			Joins("join documents on document_rows.document_id=documents.id ").
+			Joins(" join ledgers on document_rows.ledger_id=ledgers.id").
+			Joins(" join sub_ledgers on document_rows.sub_ledger_id=sub_ledgers.id").
+			Joins(" left join detaileds on document_rows.detailed_id=detaileds.id").
+			Select(` documents.document_number as DocumentNumber,
+					documents.solar_date as SolarDate,
+					ledgers.code as LedgerCode,
+					ledgers.name as LedgerName,
+					sub_ledgers.code as SubLedgerCode,
+					sub_ledgers.name as SubLedgerName,
+					detaileds.code as DetailedCode,
+					detaileds.name as DetailedName,
+					document_rows.debtor,
+					document_rows.creditor `).
+			Where("documents.company_id=? and documents.year_id=? and documents.deleted_at is null", companyid, yearid).
+			Find(&csv).Error
+
+		if err != nil {
+			ch <- false
+		}
+		ch <- true
+	}(done)
+
+	if channels.Ok(done) {
+		return csv, nil
+
+	}
+	return nil, err
 
 }

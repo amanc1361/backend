@@ -10,6 +10,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -88,18 +89,66 @@ func GetGroupBilans(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetCsv(w http.ResponseWriter, r *http.Request) {
-	var csvStruct [][]string
-	csvStruct = [][]string{
-		{"name", "address", "phone"},
-		{"Ram", "Tokyo", "1236524"},
-		{"Shaym", "Beijing", "8575675484"},
+
+	db, err := database.Connect()
+	sqldb, err := db.DB()
+	defer sqldb.Close()
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
 	}
-	b := new(bytes.Buffer)
-	w1 := csv.NewWriter(b)
-	w1.WriteAll(csvStruct)
-	w.Header().Set("Content-Type", "text/csv") // setting the content type header to text/csv
-	// w.Header().Set("Content-Disposition", "attachment;filename=TheCSVFileName.csv")
-	w.Write(b.Bytes())
+
+	repo := crud.NewRepositoryBilan(db)
+
+	func(bilanRepository repository.BilanRepository) {
+
+		bilans, err := bilanRepository.Getcsv(5, 14, "", "")
+		if err != nil {
+
+			responses.ERROR(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		b := new(bytes.Buffer)
+
+		w1 := csv.NewWriter(b)
+		header := []string{"شماره سند",
+			"تاریخ سند",
+			"کد کل",
+			"نام کل",
+			"کد معین",
+			"نام معین",
+			"کد تفضیل",
+			"نام تفضیل",
+			"بدهکار",
+			"بستانکار",
+		}
+		bomUtf8 := []byte{0xEF, 0xBB, 0xBF}
+		w1.Write([]string{string(bomUtf8[:])})
+		w1.Write(header)
+		for _, item := range bilans {
+			var s []string
+			s = append(s, fmt.Sprint(item.DocumentNumber),
+				item.SolarDate,
+				item.LedgerCode,
+				item.LedgerName,
+				item.SubLedgerCode,
+				item.SubLedgerName,
+				item.DetailedCode,
+				item.DetailedName,
+				fmt.Sprint(item.Debtor),
+				fmt.Sprint(item.Creditor),
+			)
+
+			w1.Write(s)
+		}
+
+		w.Header().Set("Content-Type", "text/csv") // setting the content type header to text/csv
+		w.Header().Set("Content-Disposition", "attachment;filename=TheCSVFileName.csv")
+		w.Write(b.Bytes())
+
+	}(repo)
+
 }
 
 func GetProfit(w http.ResponseWriter, r *http.Request) {
