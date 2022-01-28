@@ -11,7 +11,7 @@ type StoreAction struct {
 	Description       string `gorm:"size:200;not null;" json:"description"`
 	Code              int    `gorm:"not null" json:"code"`
 	CompanyID         int    `gorm:"not null" json:"company_id"`
-	Type              int    `gorm "not null" json:"type"`
+	Type              int    `gorm:"not null" json:"type"`
 	SolarDate         string `json:"solar_date"`
 	StoreID           int    `json:"store_id"`
 	DocumentNumber    int    `json:"document_number"`
@@ -19,7 +19,9 @@ type StoreAction struct {
 	UserID            int    `json:"user_id"`
 	StoreActionTypeID int    `json:"store_action_type_id"`
 	StorePersonID     int    `json:"store_person_id"`
-	YearID            int    `gorm "not null" json:"year_id"`
+	YearID            int    `gorm:"not null" json:"year_id"`
+	Tax				  int    `json:"tax"`
+	Discount int `json:"discount"`
 	StoreActionRow    []StoreActionRow
 }
 
@@ -37,6 +39,8 @@ type PublicStoreAction struct {
 	YearID            int    `json:"year_id"`
 	StoreActionTypeID int    `json:"store_action_type_id"`
 	StorePersonID     int    `json:"store_person_id"`
+	Tax int `json:"tax"`
+	Discount int `json:"discount"`
 	StoreActionRow    []StoreActionRow
 }
 
@@ -53,6 +57,8 @@ func (u *StoreAction) PublicStoreAction() interface{} {
 		SolarDate:         u.SolarDate,
 		UserID:            u.UserID,
 		YearID:            u.YearID,
+		Tax: u.Tax,
+		Discount: u.Discount,
 		StoreActionTypeID: u.StoreActionTypeID,
 		StoreActionRow:    u.StoreActionRow,
 	}

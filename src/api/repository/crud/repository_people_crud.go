@@ -57,26 +57,17 @@ func (r *repositoryPeopleCRUD) Save(People models.Person) (models.Person, error)
 	}
 
 	go func(ch chan<- bool) {
-
 		err = tx.Create(&People).Error
-
 		if err != nil {
-
 			ch <- false
 			tx.Rollback()
-
 		}
 		ch <- true
-
 	}(done)
-
-	if channels.Ok(done) {
-
+if channels.Ok(done) {
 		return People, tx.Commit().Error
 	}
-
 	return models.Person{}, err
-
 }
 
 func (r *repositoryPeopleCRUD) FindAll(companyid int, search string) ([]models.Person, error) {
@@ -187,16 +178,13 @@ func (r *repositoryPeopleCRUD) Update(People models.Person) (int64, error) {
 }
 
 func (r *repositoryPeopleCRUD) Delete(peopleid int32, detailedid int32) (int64, error) {
-
 	var err error
 	done := make(chan bool)
 	var count int64
 	go func(ch chan<- bool) {
-
 		err = r.db.Model(&models.DocumentRows{}).Where("detailed_id=?", detailedid).Count(&count).Error
 		if err != nil {
 			ch <- false
-
 		}
 		if count == 0 {
 			err = r.db.Where("id=?", peopleid).Delete(&models.Person{}).Error

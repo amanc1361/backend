@@ -17,11 +17,8 @@ func NewRepositoryLedgerCRUD(db *gorm.DB) *repositoryLedgerCRUD {
 
 	return &repositoryLedgerCRUD{db}
 }
-
 func (r *repositoryLedgerCRUD) Save(ledger models.Ledger) (models.Custledger, error) {
-
 	var err error
-
 	done := make(chan bool)
 	res := models.Custledger{}
 	go func(ch chan<- bool) {
@@ -31,38 +28,28 @@ func (r *repositoryLedgerCRUD) Save(ledger models.Ledger) (models.Custledger, er
 			return
 		}
 		ch <- true
-
 	}(done)
-
 	if channels.Ok(done) {
 		r.db.Raw("call ledgersbyid(?)", ledger.ID).Take(&res)
-
 		return res, nil
 	}
-
 	return models.Custledger{}, err
-
 }
 
 func (r *repositoryLedgerCRUD) FindAll(companyid int, search string) ([]models.Custledger, error) {
-
 	var err error
 	ledgers := []models.Custledger{}
 	done := make(chan bool)
-
 	go func(ch chan<- bool) {
 		result := r.db.Raw("call getledgers(?,?)", companyid, search).Scan(&ledgers)
-
 		err = result.Error
 		if err != nil {
 			ch <- false
 			return
 		}
 		ch <- true
-
 	}(done)
 	if channels.Ok(done) {
-
 		return ledgers, nil
 	}
 	return nil, err
@@ -99,9 +86,7 @@ func (r *repositoryLedgerCRUD) Update(ledger models.Ledger) (int64, error) {
 
 		}
 	}
-
 	return result.RowsAffected, nil
-
 }
 func (r *repositoryLedgerCRUD) Delete(uid int32) (int64, error) {
 	var result *gorm.DB

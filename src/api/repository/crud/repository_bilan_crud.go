@@ -267,14 +267,26 @@ func (r *repositoryBilan) Getcsv(companyid int, yearid int, solarfrom string, so
 	var err error
 	csv := []models.DocumnetCsv{}
 
+	var conditional string = ""
+
+	if solarfrom != "" && solarto == "" {
+		conditional = " solarafrom>=" + solarfrom
+	}
+	if solarfrom == "" && solarto != "" {
+		conditional = " solarato<=" + solarto
+	}
+	if solarfrom != "" && solarto != "" {
+		conditional = " solarafrom>=" + solarfrom + " and solarto<=" + solarto
+	}
 	done := make(chan bool)
 	go func(ch chan<- bool) {
-		err = r.db.Debug().Table("document_rows").
-			Joins("join documents on document_rows.document_id=documents.id ").
-			Joins(" join ledgers on document_rows.ledger_id=ledgers.id").
-			Joins(" join sub_ledgers on document_rows.sub_ledger_id=sub_ledgers.id").
-			Joins(" left join detaileds on document_rows.detailed_id=detaileds.id").
-			Select(` documents.document_number as DocumentNumber,
+		if conditional == "" {
+			err = r.db.Debug().Table("document_rows").
+				Joins("join documents on document_rows.document_id=documents.id ").
+				Joins(" join ledgers on document_rows.ledger_id=ledgers.id").
+				Joins(" join sub_ledgers on document_rows.sub_ledger_id=sub_ledgers.id").
+				Joins(" left join detaileds on document_rows.detailed_id=detaileds.id").
+				Select(` documents.document_number as DocumentNumber,
 					documents.solar_date as SolarDate,
 					ledgers.code as LedgerCode,
 					ledgers.name as LedgerName,
@@ -284,8 +296,27 @@ func (r *repositoryBilan) Getcsv(companyid int, yearid int, solarfrom string, so
 					detaileds.name as DetailedName,
 					document_rows.debtor,
 					document_rows.creditor `).
-			Where("documents.company_id=? and documents.year_id=? and documents.deleted_at is null", companyid, yearid).
-			Find(&csv).Error
+				Where("documents.company_id=? and documents.year_id=? and documents.deleted_at is null and solar_date<='1400/10/30'", companyid, yearid).
+				Find(&csv).Error
+		} else {
+			err = r.db.Debug().Table("document_rows").
+				Joins("join documents on document_rows.document_id=documents.id ").
+				Joins(" join ledgers on document_rows.ledger_id=ledgers.id").
+				Joins(" join sub_ledgers on document_rows.sub_ledger_id=sub_ledgers.id").
+				Joins(" left join detaileds on document_rows.detailed_id=detaileds.id").
+				Select(` documents.document_number as DocumentNumber,
+					documents.solar_date as SolarDate,
+					ledgers.code as LedgerCode,
+					ledgers.name as LedgerName,
+					sub_ledgers.code as SubLedgerCode,
+					sub_ledgers.name as SubLedgerName,
+					detaileds.code as DetailedCode,
+					detaileds.name as DetailedName,
+					document_rows.debtor,
+					document_rows.creditor `).
+				Where("documents.company_id=? and documents.year_id=? and documents.deleted_at is null "+conditional, companyid, yearid).
+				Find(&csv).Error
+		}
 
 		if err != nil {
 			ch <- false
