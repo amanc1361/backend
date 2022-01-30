@@ -18,7 +18,7 @@ type StoreActionRow struct {
 	UnitID          int     `json:"unit_id"`
 	Price           int     `json:"price"`
 	UnitName        string  `json:"unit_name"`
-	CostCenterId int `json:"cost_center_id"`
+
 	StoreObjectCode int     `json:"store_object_code"`
 
 }
@@ -35,7 +35,7 @@ type PublicStoreActionRow struct {
 	UnitID          int     `json:"unit_id"`
 	Price           int     `json:"price"`
 	UnitName        string  `json:"unit_name"`
-    CostCenterId int `json:"cost_center_id"`
+    
 	StoreObjectCode int     `json:"store_object_code"`
 
 }
@@ -57,7 +57,7 @@ func (u *StoreActionRow) PublicStoreActionRow() interface{} {
 		Price:           u.Price,
 		UnitName:        u.UnitName,
 		StoreID:         u.StoreID,
-	    CostCenterId : u.CostCenterId,
+	 
 		StoreObjectCode: u.StoreObjectCode,
 
 	}

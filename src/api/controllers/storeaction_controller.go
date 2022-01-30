@@ -427,17 +427,13 @@ func GetStoreActionsAll(w http.ResponseWriter, r *http.Request) {
 		responses.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
-
 	repo := crud.NewRepositoryStoreActionCRUD(db)
-
 	func(storeactionRepository repository.StoreActionRepository) {
-
 		storeactions, err := storeactionRepository.GetAll(int(companyid), int(yearid), int(reporttype))
 		if err != nil {
 			responses.ERROR(w, http.StatusUnprocessableEntity, err)
 			return
 		}
-
 		responses.JSON(w, http.StatusOK, storeactions)
 	}(repo)
 }

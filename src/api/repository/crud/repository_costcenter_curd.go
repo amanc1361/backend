@@ -18,7 +18,7 @@ func (r *repositoryCostCenterCrud) FindAll(companyid int) ([]models.CostCenter,e
 	costcenters:=[]models.CostCenter{}
 	done:=make(chan bool)
 	go func(ch chan<-bool) 	 {
-		 err=r.db.Where("company_id=?",companyid).Find(&costcenters).Error
+		 err=r.db.Debug().Where("company_id=?",companyid).Find(&costcenters).Error
 		 if err!=nil {
 			 ch<-false
 			 return

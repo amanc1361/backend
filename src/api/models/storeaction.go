@@ -22,6 +22,8 @@ type StoreAction struct {
 	YearID            int    `gorm:"not null" json:"year_id"`
 	Tax				  int    `json:"tax"`
 	Discount int `json:"discount"`
+	CostCenterId int `json:"cost_center_id"`
+	CostCenterName string `json:"cost_center_name"`
 	StoreActionRow    []StoreActionRow
 }
 
@@ -41,6 +43,8 @@ type PublicStoreAction struct {
 	StorePersonID     int    `json:"store_person_id"`
 	Tax int `json:"tax"`
 	Discount int `json:"discount"`
+	CostCenterId int `json:"cost_center_id"`
+	CostCenterName string `json:"cost_center_name"`
 	StoreActionRow    []StoreActionRow
 }
 
@@ -59,6 +63,8 @@ func (u *StoreAction) PublicStoreAction() interface{} {
 		YearID:            u.YearID,
 		Tax: u.Tax,
 		Discount: u.Discount,
+		CostCenterId: u.CostCenterId,
+		CostCenterName: u.CostCenterName,
 		StoreActionTypeID: u.StoreActionTypeID,
 		StoreActionRow:    u.StoreActionRow,
 	}

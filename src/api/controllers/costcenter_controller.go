@@ -19,17 +19,20 @@ func GetCostCenters(w http.ResponseWriter,r *http.Request) {
 	sqldb, err := db.DB()
 	defer sqldb.Close()
 	if err != nil {
+		
 		responses.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
+	
 	repo := crud.NewRepositoryCostCenter(db)
 	func(costcentersRepository repository.CostCenterRepository) {
 		costcenters, err := costcentersRepository.FindAll(int(companyid))
 		if err != nil {
-			responses.ERROR(w, http.StatusUnprocessableEntity, err)
+				responses.ERROR(w, http.StatusUnprocessableEntity, err)
 			return
 		}
-		responses.JSON(w, http.StatusCreated, costcenters)
+		
+		responses.JSON(w, http.StatusOK, costcenters)
 	}(repo)
 }  
 func GetCostCenterByID(w http.ResponseWriter,r *http.Request) {
