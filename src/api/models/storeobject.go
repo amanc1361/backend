@@ -20,6 +20,8 @@ type StoreObject struct {
 	Maxcount        int    `json:"maxcount"`
 	PriceType       int    `json:"price_type"`
 	DiscountType    int    `json:"discount_type"`
+	Capacity  float32 `json:"capacity"`
+
 }
 
 // PublicStoreObject this interface for response from database to client
@@ -40,6 +42,7 @@ type PublicStoreObject struct {
 	Maxcount        int    `json:"maxcount"`
 	PriceType       int    `json:"price_type"`
 	DiscountType    int    `json:"discount_type"`
+	Capacity  float32 `json:"capacity"`
 }
 
 // StoreObjects list of StoreObject
@@ -70,5 +73,6 @@ func (u *StoreObject) PublicStoreObject() interface{} {
 		Maxcount:        u.Maxcount,
 		PriceType:       u.PriceType,
 		DiscountType:    u.DiscountType,
+		Capacity: u.Capacity,
 	}
 }
