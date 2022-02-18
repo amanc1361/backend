@@ -50,7 +50,6 @@ func (r *documentRepository) Save(document models.Document) (models.Document, er
 func (r *documentRepository) SortDoc(companyid int, yearid int) (uint, error) {
 	var count int
 	r.db.Raw("call updatedocumentnumber(?,?)", companyid, yearid).Scan(&count)
-	fmt.Println(count)
 	return 1, nil
 
 }

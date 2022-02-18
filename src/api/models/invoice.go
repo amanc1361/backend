@@ -13,4 +13,6 @@ type Invocie struct {
 	Amount           int `json:"amount"`
 	Description      string `json:"description"`
 	InvoiceRows []InvoiceRow `json:"invoiceRows"`
+	CompanyId int `json:"companyId"`
+	YearId int  `json:"yearId"`
 }
