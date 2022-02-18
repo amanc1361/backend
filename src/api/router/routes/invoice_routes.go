@@ -18,4 +18,10 @@ var invoiceRoutes = []Route{
 		Handler: controllers.GetInovices,
 		IsAuth:  true,
 	},
+	{
+		Uri:     "/invoic/{id}",
+		Method:  http.MethodGet,
+		Handler: controllers.GetInvoice,
+		IsAuth:  true,
+	},
 }
