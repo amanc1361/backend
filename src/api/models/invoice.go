@@ -2,7 +2,7 @@ package models
 
 import "gorm.io/gorm"
 
-type Invocie struct {
+type Invoice struct {
 	gorm.Model
 	PersonID         int `json:"peopleId"`
 	InvoiceNumber    int `json:"invoiceNumber"`
@@ -12,7 +12,8 @@ type Invocie struct {
 	InvoiceTypeId      int `json:"invoiceTypeId"`
 	Amount           int `json:"amount"`
 	Description      string `json:"description"`
-	InvoiceRows []InvoiceRow `json:"invoiceRows"`
+	
 	CompanyId int `json:"companyId"`
 	YearId int  `json:"yearId"`
+	InvoiceRows []InvoiceRow
 }

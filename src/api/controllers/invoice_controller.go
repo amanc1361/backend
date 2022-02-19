@@ -23,7 +23,7 @@ func CreateInvocie(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	invoice := models.Invocie{}
+	invoice := models.Invoice{}
 
 	err = json.Unmarshal(body, &invoice)
 	if err != nil {
@@ -129,8 +129,7 @@ func GetInvoice(w http.ResponseWriter, r *http.Request) {
 func GetInoviceTypies(w http.ResponseWriter, r *http.Request) {
 	var v = r.URL.Query()
 
-	yearid, err := strconv.ParseUint(v.Get("yearid"), 10, 32)
-	companyid, err := strconv.ParseUint(v.Get("companyid"), 10, 32)
+		companyid, err := strconv.ParseUint(v.Get("companyid"), 10, 32)
 	
 	
 
@@ -155,7 +154,7 @@ func GetInoviceTypies(w http.ResponseWriter, r *http.Request) {
 
 	func(invoice repository.Inovice) {
 
-		invoicetypies, err := invoice.GetInovicTypies( int(companyid),int(yearid))
+		invoicetypies, err := invoice.GetInovicTypies( int(companyid))
 		if err != nil {
 			responses.ERROR(w, http.StatusUnprocessableEntity, err)
 			return

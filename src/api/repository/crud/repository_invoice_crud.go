@@ -15,12 +15,12 @@ func NewInvocieRepository(db *gorm.DB) *invoiceRepository {
 	return &invoiceRepository{db}
 }
 
-func (r *invoiceRepository) Save(invoice models.Invocie) (models.Invocie,error) {
+func (r *invoiceRepository) Save(invoice models.Invoice) (models.Invoice,error) {
 var err error
 done:=make(chan bool)
 invoicenumber,err:=r.GetLastInvoiceNumber(invoice.CompanyId,invoice.YearId,2)
 if err!=nil {
-	return models.Invocie{},err
+	return models.Invoice{},err
 }
 
 invoice.InvoiceNumber=invoicenumber+1
@@ -36,7 +36,7 @@ go func(ch chan<-bool) {
 if channels.Ok(done) {
 	return invoice,err
 }
-return models.Invocie{},err
+return models.Invoice{},err
 
 }
 
@@ -59,9 +59,9 @@ func (r *invoiceRepository ) GetLastInvoiceNumber(companyid int,yearid int,invoi
 	return 0,err
 }
 
-func (r *invoiceRepository) GetAll(companyid int,yearid int,invoicetype int)([]models.Invocie,error) {
+func (r *invoiceRepository) GetAll(companyid int,yearid int,invoicetype int)([]models.Invoice,error) {
 	var err error
-	 invoices :=[]models.Invocie{}
+	 invoices :=[]models.Invoice{}
 	 done:=make(chan bool)
 	go func(ch chan<-bool) {
 		err=r.db.Where("companyId=? and yearId=? and invoiceType=?",companyid,yearid,invoicetype).Find(&invoices).Error
@@ -74,12 +74,12 @@ func (r *invoiceRepository) GetAll(companyid int,yearid int,invoicetype int)([]m
 	if channels.Ok(done) {
 		return invoices,err
 	}
-	return []models.Invocie{},err
+	return []models.Invoice{},err
 }
 
-func (r *invoiceRepository) GetInvocie(invoiceid int)(models.Invocie,error) {
+func (r *invoiceRepository) GetInvocie(invoiceid int)(models.Invoice,error) {
 	var err error
-	var invoice models.Invocie
+	var invoice models.Invoice
 	done:=make(chan bool)
 	go func(ch chan<-bool) {
 		err=r.db.Where("id=?",invoiceid).Take(&invoice).Error
@@ -92,15 +92,15 @@ func (r *invoiceRepository) GetInvocie(invoiceid int)(models.Invocie,error) {
 	if channels.Ok(done) {
 		return invoice,err
 	}
-	return models.Invocie{},err
+	return models.Invoice{},err
 }
-func (r *invoiceRepository) GetInovicTypies(companyid int,yearid int) ([]models.InvoiceType,error) {
+func (r *invoiceRepository) GetInovicTypies(companyid int) ([]models.InvoiceType,error) {
 	var err error 
 	invoicetypies:=[]models.InvoiceType{}
 	done:=make(chan bool)
 
 	go func(ch chan<-bool) {
-		err=r.db.Where("companyId=? and yearId=?",companyid,yearid).Find(&invoicetypies).Error
+		err=r.db.Where("company_id? ",companyid).Find(&invoicetypies).Error
 		if err!=nil {
 			ch<-false 
 			return

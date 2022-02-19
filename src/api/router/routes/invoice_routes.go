@@ -25,7 +25,7 @@ var invoiceRoutes = []Route{
 		IsAuth:  true,
 	},
 	{
-		Uri:     "/invoic/types",
+		Uri:     "/invoice/invoicetype",
 		Method:  http.MethodGet,
 		Handler: controllers.GetInoviceTypies,
 		IsAuth:  true,

@@ -30,7 +30,7 @@ func Load() {
 		&models.StoreAction{},
 		&models.StoreActionRow{},
 		&models.Unit{}, &models.Person{}, &models.UesrRelatedCompany{}, &models.DocumentMerge{},
-		&models.CostCenter{},
+		&models.CostCenter{},&models.Invoice{},&models.InvoiceRow{},&models.InvoiceType{},
 	)
 
 	if err != nil {
