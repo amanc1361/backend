@@ -126,6 +126,47 @@ func GetInvoice(w http.ResponseWriter, r *http.Request) {
 	}(repo)
 }
 
+func GetInoviceTypies(w http.ResponseWriter, r *http.Request) {
+	var v = r.URL.Query()
+
+	yearid, err := strconv.ParseUint(v.Get("yearid"), 10, 32)
+	companyid, err := strconv.ParseUint(v.Get("companyid"), 10, 32)
+	
+	
+
+
+
+	if err != nil {
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	
+	
+
+	db, err := database.Connect()
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+	sqlDB, err := db.DB()
+	defer sqlDB.Close()
+
+	repo := crud.NewInvocieRepository(db)
+
+	func(invoice repository.Inovice) {
+
+		invoicetypies, err := invoice.GetInovicTypies( int(companyid),int(yearid))
+		if err != nil {
+			responses.ERROR(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		responses.JSON(w, http.StatusOK, invoicetypies)
+	}(repo)
+}
+
+
+
 
 
 

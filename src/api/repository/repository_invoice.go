@@ -9,6 +9,7 @@ type Inovice interface {
 	GetInvocie(invoiceid int)(models.Invocie,error)
 	GetAll(companyid int,yeaid int,invoicetype int)([]models.Invocie,error)
 	GetLastInvoiceNumber(companyid int,yearid int,invoicetype int)(int,error)
+	GetInovicTypies(companyid int,yearid int) ([]models.InvoiceType,error)
 	
 
 }
