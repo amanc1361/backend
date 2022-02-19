@@ -100,7 +100,7 @@ func (r *invoiceRepository) GetInovicTypies(companyid int) ([]models.InvoiceType
 	done:=make(chan bool)
 
 	go func(ch chan<-bool) {
-		err=r.db.Where("company_id? ",companyid).Find(&invoicetypies).Error
+		err=r.db.Where("company_id=? ",companyid).Find(&invoicetypies).Error
 		if err!=nil {
 			ch<-false 
 			return
