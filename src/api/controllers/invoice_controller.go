@@ -10,6 +10,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func CreateInvocie(w http.ResponseWriter, r *http.Request) {
@@ -94,6 +96,36 @@ func GetInovices(w http.ResponseWriter, r *http.Request) {
 		responses.JSON(w, http.StatusOK, invoices)
 	}(repo)
 }
+func GetInvoice(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	uid, err := strconv.ParseUint(vars["id"], 10, 64)
+	if err != nil {
+		responses.ERROR(w, http.StatusBadRequest, err)
+		return
+	}
+	db, err := database.Connect()
+	sqlDB, err := db.DB()
+	defer sqlDB.Close()
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	repo := crud.NewInvocieRepository(db)
+
+	func(invoicerepository repository.Inovice) {
+
+		invoice, err := invoicerepository.GetInvocie(int(uid))
+		if err != nil {
+			responses.ERROR(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		responses.JSON(w, http.StatusOK, invoice)
+	}(repo)
+}
+
 
 
 
