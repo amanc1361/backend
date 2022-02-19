@@ -94,3 +94,21 @@ func (r *invoiceRepository) GetInvocie(invoiceid int)(models.Invocie,error) {
 	}
 	return models.Invocie{},err
 }
+func (r *invoiceRepository) GetInovicTypies(companyid int,yearid int) ([]models.InvoiceType,error) {
+	var err error 
+	invoicetypies:=[]models.InvoiceType{}
+	done:=make(chan bool)
+
+	go func(ch chan<-bool) {
+		err=r.db.Where("companyId=? and yearId=?",companyid,yearid).Find(&invoicetypies).Error
+		if err!=nil {
+			ch<-false 
+			return
+		}
+		ch<-true
+	}(done)
+	if channels.Ok(done) {
+		return invoicetypies,err
+	}
+	return nil,err
+}
