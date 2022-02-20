@@ -9,8 +9,7 @@ type InvoiceRow struct {
 	Count int  
 	Price int 
 	Discount int 
-	Tax int 
-	ValueAdd int 
+
 	
 
 
