@@ -17,5 +17,5 @@ type Invoice struct {
 	ValueExtended int `json:"value_extended"`
 	CompanyId int `json:"companyId"`
 	YearId int  `json:"yearId"`
-	InvoiceRows []InvoiceRow
+	InvoiceRows []InvoiceRow `json:"invoice_rows"`
 }
