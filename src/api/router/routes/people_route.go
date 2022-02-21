@@ -37,11 +37,11 @@ var peopleRoutes = []Route{
 		Handler: controllers.DeletePeople,
 		IsAuth:  true,
 	},
-{
-	Uri: "/people/getremperson",
-	Method: http.MethodPost,
-	Handler: controllers.GetRemPerson,
-	IsAuth: true,
+		{
+			Uri: "/people/getremperson",
+			Method: http.MethodPost,
+			Handler: controllers.GetRemBalancePerson,
+			IsAuth: true,
 
-},
+		},
 }

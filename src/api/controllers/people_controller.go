@@ -152,7 +152,7 @@ func UpdatePeople(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func GetRemPerson(w http.ResponseWriter, r *http.Request) {
+func GetRemBalancePerson(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("00000000000000000000000000000000000000000000000")
 	var v = r.URL.Query()
 	companyid, err := strconv.ParseUint(v.Get("companyid"), 10, 32)
