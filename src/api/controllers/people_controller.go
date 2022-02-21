@@ -153,12 +153,16 @@ func UpdatePeople(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetRemPerson(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("00000000000000000000000000000000000000000000000")
 	var v = r.URL.Query()
 	companyid, err := strconv.ParseUint(v.Get("companyid"), 10, 32)
+	fmt.Println(companyid)
 	yearid, err := strconv.ParseUint(v.Get("yearid"), 10, 32)
+	fmt.Println(yearid)
 	detailedid, err := strconv.ParseUint(v.Get("detailedid"), 10, 32)
+	fmt.Println(detailedid)
 	solardate:=v.Get("solardate")
-
+  fmt.Println(solardate)
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return
@@ -182,9 +186,12 @@ func GetRemPerson(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+
+
 		responses.JSON(w, http.StatusOK, rem)
 	}(repo)
 }
+
 
 
 func DeletePeople(w http.ResponseWriter, r *http.Request) {
