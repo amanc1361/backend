@@ -126,7 +126,7 @@ func GetInvoice(w http.ResponseWriter, r *http.Request) {
 	}(repo)
 }
 
-func GetInoviceTypies(w http.ResponseWriter, r *http.Request) {
+func GetSellTypies(w http.ResponseWriter, r *http.Request) {
 	var v = r.URL.Query()
 
 		companyid, err := strconv.ParseUint(v.Get("companyid"), 10, 32)
@@ -154,13 +154,52 @@ func GetInoviceTypies(w http.ResponseWriter, r *http.Request) {
 
 	func(invoice repository.Inovice) {
 
-		invoicetypies, err := invoice.GetInovicTypies( int(companyid))
+		invoicetypies, err := invoice.GetSellTypeis( int(companyid))
 		if err != nil {
 			responses.ERROR(w, http.StatusUnprocessableEntity, err)
 			return
 		}
 
 		responses.JSON(w, http.StatusOK, invoicetypies)
+	}(repo)
+}
+
+func GetInvoiceNumber(w http.ResponseWriter, r *http.Request) {
+	var v = r.URL.Query()
+
+	yearid, err := strconv.ParseUint(v.Get("yearid"), 10, 32)
+	companyid, err := strconv.ParseUint(v.Get("companyid"), 10, 32)
+	invoicetype, err := strconv.ParseUint(v.Get("invoicecelltypeid"), 10, 32)
+	
+
+
+
+	if err != nil {
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	
+	
+
+	db, err := database.Connect()
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+	sqlDB, err := db.DB()
+	defer sqlDB.Close()
+
+	repo := crud.NewInvocieRepository(db)
+
+	func(invoice repository.Inovice) {
+
+		invoicenumber, err := invoice.GetInvoiceNumber( int(companyid),int(yearid),int(invoicetype))
+		if err != nil {
+			responses.ERROR(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		responses.JSON(w, http.StatusOK, invoicenumber)
 	}(repo)
 }
 

@@ -152,6 +152,41 @@ func UpdatePeople(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func GetRemPerson(w http.ResponseWriter, r *http.Request) {
+	var v = r.URL.Query()
+	companyid, err := strconv.ParseUint(v.Get("companyid"), 10, 32)
+	yearid, err := strconv.ParseUint(v.Get("yearid"), 10, 32)
+	detailedid, err := strconv.ParseUint(v.Get("detailedid"), 10, 32)
+	solardate:=v.Get("solardate")
+
+	if err != nil {
+		responses.ERROR(w, http.StatusBadRequest, err)
+		return
+	}
+
+	db, err := database.Connect()
+	sqlDB, err := db.DB()
+	defer sqlDB.Close()
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	repo := crud.NewRepositoryPeopleCRUD(db)
+
+	func(storepersonRepository repository.PeopleRepository) {
+
+		rem, err := storepersonRepository.GetRemPerson(int(companyid),int(yearid),int(detailedid),solardate)
+		if err != nil {
+			responses.ERROR(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		responses.JSON(w, http.StatusOK, rem)
+	}(repo)
+}
+
+
 func DeletePeople(w http.ResponseWriter, r *http.Request) {
 	var v = r.URL.Query()
 	peopleid, err := strconv.ParseUint(v.Get("id"), 10, 32)

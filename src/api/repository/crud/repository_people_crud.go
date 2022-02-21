@@ -4,7 +4,6 @@ import (
 	"back-account/src/api/models"
 	"back-account/src/api/utils/channels"
 	"errors"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -28,7 +27,6 @@ func (r *repositoryPeopleCRUD) Save(People models.Person) (models.Person, error)
 	tx := r.db.Begin()
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Println("rollback called...........................")
 			tx.Rollback()
 		}
 	}()
@@ -206,5 +204,31 @@ func (r *repositoryPeopleCRUD) Delete(peopleid int32, detailedid int32) (int64, 
 	}
 
 	return 0, err
+
+}
+
+
+func (r *repositoryPeopleCRUD) GetRemPerson(companyid int,yearid int,detailedid int, solardate string)(int,error) {
+	var err error
+	done:=make(chan bool)
+	var rem int
+	
+	go func(ch chan<-bool) {
+      err=r.db.Raw(`select sum(debtor)-sum(creditor) as rem from document_rows
+	  join documents on documents.id=document_rows.document_id
+	  where detailed_id=? and documents.deleted_at is null
+	  and documents.company_id=? and documents.year_id=? and
+	  documents.solar_date<=?`,detailedid,companyid,yearid,solardate).Take(&rem).Error
+	  if err!=nil {
+		  ch<-false
+		  return
+	  }
+	  ch<-true
+	}(done)
+
+	if channels.Ok(done) {
+		return rem,nil
+	}
+	return 0,err
 
 }

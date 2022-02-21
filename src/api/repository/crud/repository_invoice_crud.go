@@ -94,9 +94,9 @@ func (r *invoiceRepository) GetInvocie(invoiceid int)(models.Invoice,error) {
 	}
 	return models.Invoice{},err
 }
-func (r *invoiceRepository) GetInovicTypies(companyid int) ([]models.InvoiceType,error) {
+func (r *invoiceRepository) GetSellTypeis(companyid int) ([]models.SellType,error) {
 	var err error 
-	invoicetypies:=[]models.InvoiceType{}
+	invoicetypies:=[]models.SellType{}
 	done:=make(chan bool)
 
 	go func(ch chan<-bool) {
@@ -111,4 +111,27 @@ func (r *invoiceRepository) GetInovicTypies(companyid int) ([]models.InvoiceType
 		return invoicetypies,err
 	}
 	return nil,err
+}
+
+func (r *invoiceRepository) GetInvoiceNumber(companyid int,yearid int,invoicetypeid int)(int ,error) {
+	var err error 
+	var invoicenumber int
+	invoicenumber=1
+	done:=make(chan bool)
+	go func(ch chan<-bool) {
+		  err= r.db.Model(models.Invoice{}).Where("company_id=? and year_id=? and invoice_type_id=?",companyid,yearid,invoicetypeid).Select("invoice_number").Take(&invoicenumber).Error
+	    if err!=nil {
+			ch<-false
+			return
+		}
+		ch<-true
+	    
+		}(done)
+	if channels.Ok(done) {
+		 return invoicenumber,err
+	}	
+	 if err==gorm.ErrRecordNotFound {
+		  return 1,nil
+	 }
+	return 0,err
 }
