@@ -16,7 +16,27 @@ func NewRepositoryPeopleCRUD(db *gorm.DB) *repositoryPeopleCRUD {
 
 	return &repositoryPeopleCRUD{db}
 }
+ 
+func(r *repositoryPeopleCRUD) GetLikename(name string,companyid int)([]models.Detailed,error) {
+	var err error
+	done:=make(chan bool)
+	detaileds:=[]models.Detailed{}
+	go func(ch chan<-bool) {
+		err= r.db.Raw(`SELECT * FROM  detaileds 
+		 WHERE MATCH(name) AGAINST (?) and company_id=?`,name,companyid).Find(&detaileds).Error
+		 if err!=nil {
+			 ch<-false
+			 return 
+		 }
+		 ch<-true
 
+	}(done)
+    if channels.Ok(done) {
+		return detaileds,err
+	}
+	return []models.Detailed{},err
+
+}
 func (r *repositoryPeopleCRUD) Save(People models.Person) (models.Person, error) {
 
 	var err error
@@ -24,6 +44,7 @@ func (r *repositoryPeopleCRUD) Save(People models.Person) (models.Person, error)
 	done := make(chan bool)
 
 	detailed := models.Detailed{}
+	 
 	tx := r.db.Begin()
 	defer func() {
 		if r := recover(); r != nil {
@@ -40,7 +61,6 @@ func (r *repositoryPeopleCRUD) Save(People models.Person) (models.Person, error)
 		detailed.CompanyId = uint(People.CompanyID)
 
 		r1 := NewRepositoryDetailedCRUD(r.db)
-		// detailed, err = r1.Save(detailed)
 		detailed.Code, err = r1.GetLastCode(int(detailed.CompanyId))
 		err = tx.Create(&detailed).Error
 

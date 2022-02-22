@@ -44,4 +44,11 @@ var peopleRoutes = []Route{
 			IsAuth: true,
 
 		},
+		{
+			Uri: "/people/likename",
+			Method: http.MethodPost,
+			Handler: controllers.GetRemBalancePerson,
+			IsAuth: true,
+
+		},
 }

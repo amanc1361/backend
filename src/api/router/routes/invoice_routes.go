@@ -25,8 +25,8 @@ var invoiceRoutes = []Route{
 		IsAuth:  true,
 	},
 	Route{
-		Uri:     "/invoice/celltype",
-		Method:  http.MethodGet,
+		Uri:     "/invoice/selltype",
+		Method:  http.MethodPost,
 		Handler: controllers.GetSellTypies,
 		IsAuth:  true,
 	},
