@@ -18,7 +18,7 @@ func NewInvocieRepository(db *gorm.DB) *invoiceRepository {
 func (r *invoiceRepository) Save(invoice models.Invoice) (models.Invoice,error) {
 var err error
 done:=make(chan bool)
-invoicenumber,err:=r.GetLastInvoiceNumber(invoice.CompanyId,invoice.YearId,2)
+invoicenumber,err:=r.GetInvoiceNumber(invoice.CompanyId,invoice.YearId,invoice.InvoiceTypeId)
 if err!=nil {
 	return models.Invoice{},err
 }
@@ -40,24 +40,7 @@ return models.Invoice{},err
 
 }
 
-func (r *invoiceRepository ) GetLastInvoiceNumber(companyid int,yearid int,invoicetype int)(int,error) {
-	var err error 
-	done:=make(chan bool)
-	var invoicenumber int
 
-	go func(ch chan<-bool) {
-		err=r.db.Select("invoiceNumber").Where("companyId=? and year_id=? and invoiceType=?",companyid,yearid,invoicetype).Take(&invoicenumber).Error
-		if err!=nil {
-			ch<-false
-			return
-		}
-		ch<-true
-	}(done)
-	if channels.Ok(done) {
-		return invoicenumber,err
-	}
-	return 0,err
-}
 
 func (r *invoiceRepository) GetAll(companyid int,yearid int,invoicetype int)([]models.Invoice,error) {
 	var err error
@@ -116,7 +99,7 @@ func (r *invoiceRepository) GetSellTypeis(companyid int) ([]models.SellType,erro
 func (r *invoiceRepository) GetInvoiceNumber(companyid int,yearid int,invoicetypeid int)(int ,error) {
 	var err error 
 	var invoicenumber int
-	invoicenumber=1
+	invoicenumber=0
 	done:=make(chan bool)
 	go func(ch chan<-bool) {
 		  err= r.db.Model(models.Invoice{}).Where("company_id=? and year_id=? and invoice_type_id=?",companyid,yearid,invoicetypeid).Select("invoice_number").Take(&invoicenumber).Error
@@ -131,7 +114,7 @@ func (r *invoiceRepository) GetInvoiceNumber(companyid int,yearid int,invoicetyp
 		 return invoicenumber,err
 	}	
 	 if err==gorm.ErrRecordNotFound {
-		  return 1,nil
+		  return 0,nil
 	 }
 	return 0,err
 }

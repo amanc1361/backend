@@ -229,6 +229,7 @@ func (r *repositoryPeopleCRUD) GetRemPerson(companyid int,yearid int,detailedid 
 	if channels.Ok(done) {
 		return 1,nil
 	}
-	return 0,err
+	
+	return 0,nil
 
 }

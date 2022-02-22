@@ -6,31 +6,31 @@ import (
 )
 
 var invoiceRoutes = []Route{
-	{
-		Uri:     "/invoic",
+	Route{
+		Uri:     "/invoice",
 		Method:  http.MethodPost,
 		Handler: controllers.CreateInvocie,
 		IsAuth:  true,
 	},
-	{
-		Uri:     "/invoic",
+	Route{
+		Uri:     "/invoice",
 		Method:  http.MethodGet,
 		Handler: controllers.GetInovices,
 		IsAuth:  true,
 	},
-	{
-		Uri:     "/invoic/{id}",
+	Route{
+		Uri:     "/invoice/{id}",
 		Method:  http.MethodGet,
 		Handler: controllers.GetInvoice,
 		IsAuth:  true,
 	},
-	{
+	Route{
 		Uri:     "/invoice/celltype",
 		Method:  http.MethodGet,
 		Handler: controllers.GetSellTypies,
 		IsAuth:  true,
 	},
-	{
+	Route{
 		Uri:     "/invoice/getlastnumber",
 		Method:  http.MethodPost,
 		Handler: controllers.GetInvoiceNumber,

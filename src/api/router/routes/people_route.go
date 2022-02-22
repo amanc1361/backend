@@ -39,7 +39,7 @@ var peopleRoutes = []Route{
 	},
 		{
 			Uri: "/people/getremperson",
-			Method: http.MethodPost,
+			Method: http.MethodGet,
 			Handler: controllers.GetRemBalancePerson,
 			IsAuth: true,
 

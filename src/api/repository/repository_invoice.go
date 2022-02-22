@@ -8,7 +8,6 @@ type Inovice interface {
 	// Update(invoice models.Invocie,invoiceid int)(models.Invocie,error)
 	GetInvocie(invoiceid int)(models.Invoice,error)
 	GetAll(companyid int,yeaid int,invoicetype int)([]models.Invoice,error)
-	GetLastInvoiceNumber(companyid int,yearid int,invoicetype int)(int,error)
 	GetSellTypeis(companyid int) ([]models.SellType,error)
 	GetInvoiceNumber(companyid int,yearid int,typeinvoice int)(int,error)
 	
