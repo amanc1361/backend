@@ -44,8 +44,8 @@ var peopleRoutes = []Route{
 			IsAuth: true,
 
 		},
-	  	Route{
-			Uri: "/people/likename",
+	  	{
+			Uri: "/people/getname",
 			Method: http.MethodPost,
 			Handler: controllers.GetlikeName,
 			IsAuth: true,

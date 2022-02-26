@@ -25,7 +25,21 @@ func (r *repositoryStoreActionCRUD) Save(store models.StoreAction) (models.Store
 	store.CreatedAt = time.Now()
 	done := make(chan bool)
 	var code int
-	r.db.Raw("select max(code) from store_actions where  company_id=? and year_id=? and type=? ", store.CompanyID, store.YearID, store.Type).Scan(&code)
+	if store.Type==1 {
+		r.db.Raw(`select max(code) from store_actions where  company_id=? 
+	and year_id=? and type=? `,
+	 store.CompanyID, store.YearID, store.Type).Scan(&code)
+	} else if store.Type==2 && store.StoreActionTypeID==8 {
+
+	
+	r.db.Raw(`select max(code) from store_actions where  company_id=? 
+	and year_id=? and type=? and store_action_type_id=? `,
+	 store.CompanyID, store.YearID, store.Type,store.StoreActionTypeID).Scan(&code)
+	} else  {
+		r.db.Raw(`select max(code) from store_actions where  company_id=? 
+		and year_id=? and type=? and store_action_type_id!=? `,
+		 store.CompanyID, store.YearID, store.Type,8).Scan(&code)
+	}
 
 	if code == 0 {
 		code = 1

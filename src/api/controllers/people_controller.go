@@ -81,14 +81,16 @@ func GetPeoples(w http.ResponseWriter, r *http.Request) {
 	}(repo)
 }
 func GetlikeName(w http.ResponseWriter, r *http.Request) {
-	vars := r.URL.Query();
-
-	uid, err := strconv.ParseUint(vars.Get("comapnyid"), 10, 32)
-	if err != nil {
-		responses.ERROR(w, http.StatusBadRequest, err)
-		return
-}
-	name:=vars.Get("name")
+	fmt.Println("dssdfsdfsfsfsfsfd")
+	fmt.Println("dfsdfsfdsfdsdfsfdsd")
+// 	 var	vars= r.URL.Query();
+ 
+// 	uid, err := strconv.ParseUint(vars.Get("comapnyid"), 10, 32)
+// 	if err != nil {
+// 		responses.ERROR(w, http.StatusBadRequest, err)
+// 		return
+// }
+// 	name:=vars.Get("name")
 
 
 	db, err := database.Connect()
@@ -103,7 +105,7 @@ func GetlikeName(w http.ResponseWriter, r *http.Request) {
 
 	func(storepersonRepository repository.PeopleRepository) {
 
-		detaileds, err := storepersonRepository.GetLikename(name,int(uid))
+		detaileds, err := storepersonRepository.GetLikeName("rahim",5)
 		if err != nil {
 			responses.ERROR(w, http.StatusUnprocessableEntity, err)
 			return
