@@ -10,6 +10,7 @@ type Invoice struct {
 	SolarDate        string `json:"solar_date"`
 	DueDate          string `json:"due_date"`
 	InvoiceTypeId      int `json:"invoice_type_id"`
+	StoreId int `json:"store_id"`
 	SellTypeId int `json:"sell_type_id"`
 	Amount           int `json:"amount"`
 	Description      string `json:"description"`

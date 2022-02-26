@@ -112,10 +112,10 @@ func (r *invoiceRepository) GetInvoiceNumber(companyid int,yearid int,invoicetyp
 	    
 		}(done)
 	if channels.Ok(done) {
-		 return invoicenumber+1,err
+		 return invoicenumber+1,nil
 	}	
 	 if err==gorm.ErrRecordNotFound {
 		  return 1,nil
 	 }
-	return 1,err
+	return 1,nil
 }
