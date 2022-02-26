@@ -101,7 +101,7 @@ func (r *invoiceRepository) GetInvoiceNumber(companyid int,yearid int,invoicetyp
 	invoicenumber:=0
 	done:=make(chan bool)
 	go func(ch chan<-bool) {
-		err=r.db.Raw("select max(invoice_number) from inovices where company_id=? and year_id=? and invoice_type_id=",
+		err=r.db.Raw("select max(invoice_number) from inovices where company_id=? and year_id=? and invoice_type_id=?",
 	                     companyid,yearid,invoicetypeid ).Take(&invoicenumber).Error
 		  
 	    if err!=nil {
