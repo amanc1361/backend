@@ -144,3 +144,45 @@ func (r *repositoryStoreCRUD) Delete(uid int32) (int64, error) {
 	return result.RowsAffected, nil
 
 }
+
+func(r *repositoryStoreCRUD) GetStories(companyid int,yearid int)([]models.Stories,error) {
+	var err error
+	 done:=make(chan bool)
+	 stories:=[]models.Stories{}
+
+	 go func (ch chan<-bool)  {
+		 err=r.db.Raw("call getstories(?,?)",companyid,yearid).Take(&stories).Error
+		 if err!=nil {
+			 ch<-false
+			 return
+		 }
+		 ch<-true
+		 
+	 }(done)
+	 if channels.Ok(done) {
+		 return stories,nil
+	 }
+	 return []models.Stories{},err
+
+}
+
+func(r *repositoryStoreCRUD) GetStoreWithObject(companyid int,yearid int,storeid int)([]models.StoreRemObjects,error) {
+	var err error
+	 done:=make(chan bool)
+	 stories:=[]models.StoreRemObjects{}
+
+	 go func (ch chan<-bool)  {
+		 err=r.db.Raw("call getobjectsbystoreid(?,?,?)",companyid,yearid,storeid).Take(&stories).Error
+		 if err!=nil {
+			 ch<-false
+			 return
+		 }
+		 ch<-true
+		 
+	 }(done)
+	 if channels.Ok(done) {
+		 return stories,nil
+	 }
+	 return []models.StoreRemObjects{},err
+
+}
