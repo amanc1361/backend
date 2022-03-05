@@ -1,11 +1,12 @@
 package models
 
-type Stories struct {
-	Firstin  int    `json:"firstin"`
-	Firstout int    `json:"firstout"`
-	Flowin   int    `json:"flowin"`
-	Flowout  int    `json:"flowout"`
-	Rem      int    `json:"rem"`
-	StoreId  int    `json:"store_id"`
-	Name     string `json:"name"`
+type StoriesRem struct {
+	Firstin  float32 `json:"firstin"`
+	Flowin   float32 `json:"flowin"`
+	Flowout  float32 `json:"flowout"`
+	Lrem     float32 `json:"lrem"`
+	FstoreId int     `json:"fstore_id"`
+	Fname    string  `json:"fname"`
+	LstoreId int     `json:"lstore_id"`
+	Lname    string  `json:"lname"`
 }

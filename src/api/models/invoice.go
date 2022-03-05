@@ -16,7 +16,8 @@ type Invoice struct {
 	Description      string `json:"description"`
 	Tax int `json:"tax"`
 	ValueAdd int `json:"value_add"`
-	ValueExtended int `json:"value_extended"`
+	Discount int `json:"discount"`
+	TrasnportCost int 	`json:"transport_cost"`
 	CompanyId int `json:"company_id"`
 	YearId int  `json:"year_id"`
 	InvoiceRows []InvoiceRow `json:"invoice_rows"`

@@ -4,7 +4,6 @@ import (
 	"back-account/src/api/models"
 	"back-account/src/api/utils/channels"
 	"errors"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -20,7 +19,7 @@ func NewRepositoryPeopleCRUD(db *gorm.DB) *repositoryPeopleCRUD {
  
 func(r *repositoryPeopleCRUD) GetLikeName(name string,companyid int)([]models.Detailed,error) {
 	var err error
-	fmt.Println("dddddd")
+	
 	done:=make(chan bool)
 	detaileds:=[]models.Detailed{}
 	go func(ch chan<-bool) {

@@ -145,10 +145,10 @@ func (r *repositoryStoreCRUD) Delete(uid int32) (int64, error) {
 
 }
 
-func(r *repositoryStoreCRUD) GetStories(companyid int,yearid int)([]models.Stories,error) {
+func(r *repositoryStoreCRUD) GetStories(companyid int,yearid int)([]models.StoriesRem,error) {
 	var err error
 	 done:=make(chan bool)
-	 stories:=[]models.Stories{}
+	 stories:=[]models.StoriesRem{}
 
 	 go func (ch chan<-bool)  {
 		 err=r.db.Raw("call getstories(?,?)",companyid,yearid).Take(&stories).Error
@@ -162,7 +162,7 @@ func(r *repositoryStoreCRUD) GetStories(companyid int,yearid int)([]models.Stori
 	 if channels.Ok(done) {
 		 return stories,nil
 	 }
-	 return []models.Stories{},err
+	 return []models.StoriesRem{},err
 
 }
 

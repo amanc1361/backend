@@ -37,4 +37,18 @@ var storeRoutes = []Route{
 		Handler: controllers.DeleteStore,
 		IsAuth:  true,
 	},
+	Route{
+		Uri:     "/storerem",
+		Method:  http.MethodGet,
+		Handler: controllers.GetStorerem,
+		IsAuth:  true,
+	},
+	Route{
+		Uri:     "/storeremobject",
+		Method:  http.MethodGet,
+		Handler: controllers.GetStorewithremobject,
+		IsAuth:  true,
+	},
+
+
 }

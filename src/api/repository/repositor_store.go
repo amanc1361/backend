@@ -8,6 +8,6 @@ type StoreRepository interface {
 	FindById(uint32) (models.Store, error)
 	Update(models.Store) (int64, error)
 	Delete(int32) (int64, error)
-	GetStories(companyid int,yearid int)([]models.Storeis,error)
-	GetStoreWithObject(companyid int,yearid int,storeid int)([]models.StoreRemObjects,error)
+	GetStories(companyid int,yearid int) ([]models.StoriesRem,error)
+	GetStoreWithObject(companyid int,yearid int,storeid int) ([]models.StoreRemObjects,error)
 }
