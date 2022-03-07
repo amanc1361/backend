@@ -18,8 +18,8 @@ type StoreObject struct {
 	UnitID          int    `json:"unit_id"`
 	Mincount        int    `json:"mincount"`
 	Maxcount        int    `json:"maxcount"`
-	Tax int `json:"tax"`
-	ValueAdd int `json:"value_add"`
+	Tax float32 `json:"tax"`
+	ValueAdd float32 `json:"value_add"`
 	PriceType       int    `json:"price_type"`
 	DiscountType    int    `json:"discount_type"`
 	Capacity  float32 `json:"capacity"`
