@@ -34,6 +34,7 @@ go func(ch chan<-bool) {
 }(done)
 
 if channels.Ok(done) {
+	r.db.Model(&models.StoreAction{}).Where("id=?",invoice.StoreId).Update("invoice_id",invoice.ID)
 	return invoice,err
 }
 return models.Invoice{},err
