@@ -49,7 +49,7 @@ func (r *invoiceRepository) GetAll(companyid int,yearid int,invoicetype int)([]m
 	 invoices :=[]modelsout.Invoice{}
 	 done:=make(chan bool)
 	go func(ch chan<-bool) {
-		err=r.db.Model(&models.Invoice{}).
+		err=r.db.Table("invoices").
 		Select("invoices.id,invoices.solar_date,invoices.invoice_number,invoices.amount,invoices.description,concat( people.name,' ',people.family) as customer_name").
 		Joins("people on invoices.person_id=people.id").
 		Where("invoices.company_id=? and invoices.year_id=? and invoices.invoice_type_id=?",companyid,yearid,invoicetype).
