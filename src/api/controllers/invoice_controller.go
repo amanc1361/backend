@@ -7,7 +7,6 @@ import (
 	"back-account/src/api/repository/crud"
 	"back-account/src/api/responses"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -129,7 +128,7 @@ func GetInvoice(w http.ResponseWriter, r *http.Request) {
 
 func GetSellTypies(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("dfsssssssssssssssssssssssssssssssss")
+	
 	var v = r.URL.Query()
 
 		companyid, err := strconv.ParseUint(v.Get("companyid"), 10, 32)
