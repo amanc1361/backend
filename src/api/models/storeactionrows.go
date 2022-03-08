@@ -18,7 +18,6 @@ type StoreActionRow struct {
 	UnitID          int     `json:"unit_id"`
 	Price           int     `json:"price"`
 	UnitName        string  `json:"unit_name"`
-
 	StoreObjectCode int     `json:"store_object_code"`
 
 }
@@ -35,7 +34,8 @@ type PublicStoreActionRow struct {
 	UnitID          int     `json:"unit_id"`
 	Price           int     `json:"price"`
 	UnitName        string  `json:"unit_name"`
-    
+    Tax float32 `json:"tax"`
+	ValueAdd float32  `json:"value_add"`
 	StoreObjectCode int     `json:"store_object_code"`
 
 }

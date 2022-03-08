@@ -301,10 +301,10 @@ func (r *repositoryStoreActionCRUD) FindById(uid uint32) (models.StoreAction, er
 
 }
 
-func (r *repositoryStoreActionCRUD) GetStoreActionRows(uid uint32) ([]models.StoreActionRow, error) {
+func (r *repositoryStoreActionCRUD) GetStoreActionRows(uid uint32) ([]models.PublicStoreActionRow, error) {
 
 	var err error
-	storeactionrows := []models.StoreActionRow{}
+	storeactionrows := []models.PublicStoreActionRow{}
 	done := make(chan bool)
 
 	go func(ch chan<- bool) {

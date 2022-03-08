@@ -14,7 +14,7 @@ type StoreActionRepository interface {
 	GetCountObject(companyid int, yearid int, id int) (float32, error)
 	Getsend(companyid int, yearid int) ([]modelsout.StoreActiondoc, error)
 	Getrecive(companyid int, yearid int) ([]modelsout.StoreActiondoc, error)
-	GetStoreActionRows(uint32) ([]models.StoreActionRow, error)
+	GetStoreActionRows(uint32) ([]models.PublicStoreActionRow, error)
 	GetKardex(companyid int, yearid int, id int) ([]modelsout.Kradex, error)
 	GetRemObject(companyid int, yearid int, id int) ([]modelsout.Remobject, error)
 	GetPriceObject(companyid int, yearid int, objectid int, solardate string) (float64, error)
