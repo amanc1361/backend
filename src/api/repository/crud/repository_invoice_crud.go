@@ -2,6 +2,7 @@ package crud
 
 import (
 	"back-account/src/api/models"
+	"back-account/src/api/modelsout"
 	"back-account/src/api/utils/channels"
 
 	"gorm.io/gorm"
@@ -43,13 +44,13 @@ return models.Invoice{},err
 
 
 
-func (r *invoiceRepository) GetAll(companyid int,yearid int,invoicetype int)([]models.Invoice,error) {
+func (r *invoiceRepository) GetAll(companyid int,yearid int,invoicetype int)([]modelsout.Invoice,error) {
 	var err error
-	 invoices :=[]models.Invoice{}
+	 invoices :=[]modelsout.Invoice{}
 	 done:=make(chan bool)
 	go func(ch chan<-bool) {
 		err=r.db.Model(&models.Invoice{}).
-		Select("invoices.id,invoices.solar_date,invoices.invoice_number,invoices.amount,invoices.description,people.name+' '+people.family as name").
+		Select("invoices.id,invoices.solar_date,invoices.invoice_number,invoices.amount,invoices.description,people.name+' '+people.family as customer_name").
 		Joins("people on invoices.people_id=people.id").
 		Where("invoices.company_id=? and invoices.year_id=? and invoices_invoice_type_id=?",companyid,yearid,invoicetype).
 		Order("invoices.invoice_number").
@@ -64,7 +65,7 @@ func (r *invoiceRepository) GetAll(companyid int,yearid int,invoicetype int)([]m
 	if channels.Ok(done) {
 		return invoices,err
 	}
-	return []models.Invoice{},err
+	return []modelsout.Invoice{},err
 }
 
 func (r *invoiceRepository) GetInvocie(invoiceid int)(models.Invoice,error) {

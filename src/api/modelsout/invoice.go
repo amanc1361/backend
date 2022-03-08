@@ -2,7 +2,7 @@ package modelsout
 
 type Invoice struct {
 	Id               int    `json:"id"`
-	Name             string `json:"name"`
+	CustomerName     string `json:"coustomer_name"`
 	InvoiceNumber    int    `json:"invoice_number"`
 	InvoiceBuynumber string `json:"buy_number"`
 	SolarDate        string `json:"solar_date"`
