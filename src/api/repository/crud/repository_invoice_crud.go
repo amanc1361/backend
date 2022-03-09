@@ -73,7 +73,7 @@ func (r *invoiceRepository) GetInvocie(invoiceid int)(models.Invoice,error) {
 	var invoice models.Invoice
 	done:=make(chan bool)
 	go func(ch chan<-bool) {
-		err=r.db.Where("id=?",invoiceid).Take(&invoice).Error
+		err=r.db.Where("id=?",invoiceid).Preload("invoice_rows").Take(&invoice).Error
 		if err!=nil {
 			ch<-false
 			return
