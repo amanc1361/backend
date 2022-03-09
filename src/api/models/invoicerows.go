@@ -14,6 +14,8 @@ type InvoiceRow struct {
 	Discount int  `json:"discount"`
 	Tax int  `json:"tax"`
 	ValueAdd int `json:"value_add"`
+	TaxPercent float32 `json:"tax_percent"`
+	ValueaddPercent float32 `json:"valueadd_percent"`
 
 	
 
