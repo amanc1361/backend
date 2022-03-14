@@ -7,4 +7,15 @@ type Company struct {
 	Name          string `gorm:"unique;not null"`
 	Image         string
 	CompanyTypeID uint
+	RegisterCode string `json:"register_code"`
+	EconomyCode string `json:"economy_code"`
+	NationalCode string `json:"national_code"`
+	Address string `json:"address"`
+	PsotalCode string `json:"postal_code"`
+	Tel string `json:"tel"`
+	Mobile string `json:"mobile"`
+	Fax string `json:"fax"`
+	AccoutNumber string `json:"account_number"`
+	CardNumbre string `json:"card_number"`
+	ShebaNumber string `json:"sheba_number"`
 }
