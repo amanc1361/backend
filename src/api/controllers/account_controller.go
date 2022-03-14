@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 func SaveAccount(w http.ResponseWriter, r *http.Request) {
@@ -70,4 +71,93 @@ func UpdateAccount(w http.ResponseWriter, r *http.Request) {
 		}
 		responses.JSON(w, http.StatusOK, account)
 	}(repo)
+}
+func DeleteAccount(w http.ResponseWriter,r *http.Request) {
+	var v = r.URL.Query()
+
+	accountid, err := strconv.ParseUint(v.Get("accountid"), 10, 32)
+		
+		if err != nil {
+			responses.ERROR(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+		
+		db, err := database.Connect()
+		sqlDB, err := db.DB()
+		defer sqlDB.Close()
+	
+		if err != nil {
+			responses.ERROR(w, http.StatusInternalServerError, err)
+			return
+		}
+		repo := crud.NewRepositoryAccountCRUD(db)
+		func(accountRepository repository.AccountRepository) {
+			 err = accountRepository.Delete(int(accountid))
+			if err != nil {
+				responses.ERROR(w, http.StatusUnprocessableEntity, err)
+				return
+			}
+			responses.JSON(w, http.StatusOK, 1)
+		}(repo)
+	
+}
+func GetAccount(w http.ResponseWriter,r *http.Request) {
+	var v = r.URL.Query()
+
+	accountid, err := strconv.ParseUint(v.Get("accountid"), 10, 32)
+		
+		if err != nil {
+			responses.ERROR(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+		
+		db, err := database.Connect()
+		sqlDB, err := db.DB()
+		defer sqlDB.Close()
+	
+	
+		if err != nil {
+			responses.ERROR(w, http.StatusInternalServerError, err)
+			return
+		}
+		repo := crud.NewRepositoryAccountCRUD(db)
+		func(accountRepository repository.AccountRepository) {
+			 account,err := accountRepository.Get(int(accountid))
+			if err != nil {
+				responses.ERROR(w, http.StatusUnprocessableEntity, err)
+				return
+			}
+			responses.JSON(w, http.StatusOK, account)
+		}(repo)
+	
+}
+
+func GetAccounts(w http.ResponseWriter,r *http.Request) {
+	var v = r.URL.Query()
+
+	companyid, err := strconv.ParseUint(v.Get("companyid"), 10, 32)
+		
+		if err != nil {
+			responses.ERROR(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+		
+		db, err := database.Connect()
+		sqlDB, err := db.DB()
+		defer sqlDB.Close()
+	
+		if err != nil {
+			responses.ERROR(w, http.StatusInternalServerError, err)
+			return
+		}
+		repo := crud.NewRepositoryAccountCRUD(db)
+		func(accountRepository repository.AccountRepository) {
+			 accounts,err := accountRepository.Gets(int(companyid))
+			if err != nil {
+				responses.ERROR(w, http.StatusUnprocessableEntity, err)
+				return
+			}
+			responses.JSON(w, http.StatusOK, accounts)
+		}(repo)
+	
 }

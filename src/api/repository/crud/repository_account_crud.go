@@ -92,13 +92,13 @@ func (r *repositoryAccountCrud) Get(accountid int) (models.Account,error) {
 	return models.Account{},err
 
 }
-func (r *repositoryAccountCrud) Gets()([]models.Account,error) {
+func (r *repositoryAccountCrud) Gets(companyid int)([]models.Account,error) {
 	var err error
     done:=make(chan bool)
 	acounts:=[]models.Account{}
 
 	go func(ch chan<-bool) {
-		 err=r.db.Take(&acounts).Error
+		 err=r.db.Model(models.Account{}).Where("company_id=?",companyid).Take(&acounts).Error
 		 if err!=nil {
 			 ch<-false
 			 return
