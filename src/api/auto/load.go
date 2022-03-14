@@ -31,6 +31,8 @@ func Load() {
 		&models.StoreActionRow{},
 		&models.Unit{}, &models.Person{}, &models.UesrRelatedCompany{}, &models.DocumentMerge{},
 		&models.CostCenter{},&models.Invoice{},&models.InvoiceRow{},
+		&models.Account{},&models.AccountType{},&models.Bank{},&models.BankBranch{},
+		&models.City{},
 		&models.InvoiceType{},&models.SellType{},
 	)
 
