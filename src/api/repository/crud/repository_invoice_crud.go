@@ -73,7 +73,7 @@ func (r *invoiceRepository) GetInvocie(invoiceid int)(models.Invoice,error) {
 	var invoice models.Invoice
 	done:=make(chan bool)
 	go func(ch chan<-bool) {
-		err=r.db.Where("id=?",invoiceid).Association("invoice_rows").Find(&invoice)
+		err=r.db.Model(&models.Invoice{}).Debug().Where("id=?",invoiceid).Preload("InvoiceRows").Find(&invoice).Error
 		if err!=nil {
 			ch<-false
 			return
@@ -126,4 +126,22 @@ func (r *invoiceRepository) GetInvoiceNumber(companyid int,yearid int,invoicetyp
 		  return 1,nil
 	 }
 	return 1,nil
+}
+
+func (r *invoiceRepository) Update(invoice models.Invoice)(models.Invoice,error) {
+	var err error
+	done:=make(chan bool)
+	go func (ch chan<-bool)  {
+		err=r.db.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&invoice).Error
+		if err!=nil {
+			ch<-false
+			return
+		}
+		ch<-true
+	}(done)
+
+	if channels.Ok(done) {
+		return invoice,nil
+	}
+	return models.Invoice{},err
 }

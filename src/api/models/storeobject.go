@@ -44,6 +44,8 @@ type PublicStoreObject struct {
 	Maxcount        int    `json:"maxcount"`
 	PriceType       int    `json:"price_type"`
 	DiscountType    int    `json:"discount_type"`
+	Tax float32 `json:"tax"`
+	ValueAdd float32 `json:"value_add"`
 	Capacity  float32 `json:"capacity"`
 }
 

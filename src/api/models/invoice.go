@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type Invoice struct {
 	gorm.Model
-	PersonID         int `json:"people_id"`
+	PersonID         int `json:"person_id"`
 	InvoiceNumber    int `json:"invoice_number"`
 	InvoiceBuynumber string `json:"buy_number"`
 	SolarDate        string `json:"solar_date"`

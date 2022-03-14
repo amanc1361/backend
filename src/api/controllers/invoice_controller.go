@@ -7,6 +7,7 @@ import (
 	"back-account/src/api/repository/crud"
 	"back-account/src/api/responses"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -101,9 +102,11 @@ func GetInvoice(w http.ResponseWriter, r *http.Request) {
 
 	uid, err := strconv.ParseUint(vars["id"], 10, 64)
 	if err != nil {
+		fmt.Println("in heeeee")
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return
 	}
+	fmt.Println(uid)
 	db, err := database.Connect()
 	sqlDB, err := db.DB()
 	defer sqlDB.Close()
@@ -118,6 +121,7 @@ func GetInvoice(w http.ResponseWriter, r *http.Request) {
 
 		invoice, err := invoicerepository.GetInvocie(int(uid))
 		if err != nil {
+		
 			responses.ERROR(w, http.StatusUnprocessableEntity, err)
 			return
 		}
@@ -203,6 +207,47 @@ func GetInvoiceNumber(w http.ResponseWriter, r *http.Request) {
 
 		responses.JSON(w, http.StatusOK, invoicenumber)
 	}(repo)
+}
+
+func UpdateInvoice(w http.ResponseWriter,r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+
+	if err != nil {
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	invoice := models.Invoice{}
+	err = json.Unmarshal(body, &invoice)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	db, err := database.Connect()
+	sqlDB, err := db.DB()
+
+	defer sqlDB.Close()
+
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	repo := crud.NewInvocieRepository(db)
+
+	func(invoiceRepository repository.Inovice) {
+		 invoice,err=invoiceRepository.Update(invoice)
+		 
+		 if err != nil {
+			 responses.ERROR(w, http.StatusUnprocessableEntity, err)
+			 return
+		 }
+ 
+		 responses.JSON(w, http.StatusOK, invoice)
+
+	}(repo)
+
+
 }
 
 
