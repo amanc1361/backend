@@ -15,7 +15,6 @@ type Company struct {
 	Tel string `json:"tel"`
 	Mobile string `json:"mobile"`
 	Fax string `json:"fax"`
-	AccoutNumber string `json:"account_number"`
-	CardNumbre string `json:"card_number"`
-	ShebaNumber string `json:"sheba_number"`
+	Accounts []Account `json:"accounts"`
+
 }
