@@ -92,3 +92,22 @@ func (r *repositoryAccountCrud) Get(accountid int) (models.Account,error) {
 	return models.Account{},err
 
 }
+func (r *repositoryAccountCrud) Gets()([]models.Account,error) {
+	var err error
+    done:=make(chan bool)
+	acounts:=[]models.Account{}
+
+	go func(ch chan<-bool) {
+		 err=r.db.Take(&acounts).Error
+		 if err!=nil {
+			 ch<-false
+			 return
+		 }
+		 ch<-true
+	}(done)
+	if channels.Ok(done) {
+		return acounts,nil
+
+	}
+	return []models.Account{},err
+}
