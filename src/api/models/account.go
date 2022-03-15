@@ -13,4 +13,5 @@ type Account struct {
 	IsActive        bool   `json:"is_active"`
 	ShebaNumber     string `json:"sheba_number"`
 	CardNumber      string `json:"card_number"`
+	CompanyId int `json:"company_id"`
 }

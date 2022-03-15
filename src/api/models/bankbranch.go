@@ -8,4 +8,5 @@ type BankBranch struct {
 	BankID int `json:"bank_id"`
 	BranchCode int `json:"branch_code"`
 	CityId int `json:"city_id"`
+	CompanyId int `json:"company_id"`
 }
