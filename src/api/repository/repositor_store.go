@@ -9,5 +9,5 @@ type StoreRepository interface {
 	Update(models.Store) (int64, error)
 	Delete(int32) (int64, error)
 	GetStories(companyid int,yearid int) ([]models.StoriesRem,error)
-	GetStoreWithObject(companyid int,yearid int,storeid int) ([]models.StoreRemObjects,error)
+	GetStoreWithObject(companyid int,yearid int,storeid int,reportrtpe int) ([]models.StoreRemObjects,error)
 }

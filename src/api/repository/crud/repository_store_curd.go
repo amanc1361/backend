@@ -166,13 +166,13 @@ func(r *repositoryStoreCRUD) GetStories(companyid int,yearid int)([]models.Stori
 
 }
 
-func(r *repositoryStoreCRUD) GetStoreWithObject(companyid int,yearid int,storeid int)([]models.StoreRemObjects,error) {
+func(r *repositoryStoreCRUD) GetStoreWithObject(companyid int,yearid int,storeid int,reportrtpe int)([]models.StoreRemObjects,error) {
 	var err error
 	 done:=make(chan bool)
 	 stories:=[]models.StoreRemObjects{}
 
 	 go func (ch chan<-bool)  {
-		 err=r.db.Raw("call getobjectsbystoreid(?,?,?)",companyid,yearid,storeid).Take(&stories).Error
+		 err=r.db.Raw("call getobjectsbystoreid(?,?,?,?)",companyid,yearid,storeid,reportrtpe).Take(&stories).Error
 		 if err!=nil {
 			 ch<-false
 			 return

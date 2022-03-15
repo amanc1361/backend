@@ -215,6 +215,7 @@ func GetStorewithremobject(w http.ResponseWriter, r *http.Request) {
 	companyid, err := strconv.ParseUint(v.Get("companyid"), 10, 32)
 	yearid, err := strconv.ParseUint(v.Get("yearid"), 10, 32)
 	storeid, err := strconv.ParseUint(v.Get("storeid"), 10, 32)
+	reporttype, err := strconv.ParseUint(v.Get("reportrtpe"), 10, 32)
 	
 	db, err := database.Connect()
 	sqlDB, err := db.DB()
@@ -228,7 +229,7 @@ func GetStorewithremobject(w http.ResponseWriter, r *http.Request) {
 	
 	func(storeRepository repository.StoreRepository) {
 
-		storeis, err := storeRepository.GetStoreWithObject(int(companyid), int(yearid),int(storeid))
+		storeis, err := storeRepository.GetStoreWithObject(int(companyid), int(yearid),int(storeid),int(reporttype))
 		if err != nil {
 			responses.ERROR(w, http.StatusUnprocessableEntity, err)
 			return

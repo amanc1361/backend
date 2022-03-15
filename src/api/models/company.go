@@ -16,5 +16,4 @@ type Company struct {
 	Mobile string `json:"mobile"`
 	Fax string `json:"fax"`
 	Accounts []Account `json:"accounts"`
-
 }
