@@ -251,12 +251,12 @@ func UpdateInvoice(w http.ResponseWriter,r *http.Request) {
 }
 
 func GetTaxYear(w http.ResponseWriter, r *http.Request) {
-	var v = mux.Vars(r)
+	var v = r.URL.Query()
 
-	yearid, err := strconv.ParseUint(v["yearid"], 10, 32)
-	companyid, err := strconv.ParseUint(v["companyid"], 10, 32)
-	solarfrom:=v["solarfrom"]
-	solarto:=v["solarto"]
+	yearid, err := strconv.ParseUint(v.Get("yearid"), 10, 32)
+	companyid, err := strconv.ParseUint(v.Get("companyid"), 10, 32)
+	solarfrom:=v.Get("solarfrom")
+	solarto:=v.Get("solarto")
 	
 
 
