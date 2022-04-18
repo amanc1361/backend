@@ -13,6 +13,7 @@ type Inovice interface {
 	GetAll(companyid int,yeaid int,invoicetype int)([]modelsout.Invoice,error)
 	GetSellTypeis(companyid int) ([]models.SellType,error)
 	GetInvoiceNumber(companyid int,yearid int,typeinvoice int)(int,error)
+	GetYearTax(companyid int,yearid int,solarfrom string,solarto string) ([]modelsout.InvoiceTax,error)
 	
 
 }

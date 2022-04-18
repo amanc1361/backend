@@ -250,6 +250,47 @@ func UpdateInvoice(w http.ResponseWriter,r *http.Request) {
 
 }
 
+func GetTaxYear(w http.ResponseWriter, r *http.Request) {
+	var v = r.URL.Query()
+
+	yearid, err := strconv.ParseUint(v.Get("yearid"), 10, 32)
+	companyid, err := strconv.ParseUint(v.Get("companyid"), 10, 32)
+	solarfrom:=v.Get("solarfrom")
+	solarto:=v.Get("solarto")
+	
+
+
+
+	if err != nil {
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	
+	
+
+	db, err := database.Connect()
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+	sqlDB, err := db.DB()
+	defer sqlDB.Close()
+
+	repo := crud.NewInvocieRepository(db)
+
+	func(invoice repository.Inovice) {
+
+		invoicetaxs, err := invoice.GetYearTax( int(companyid),int(yearid),solarfrom,solarto)
+		if err != nil {
+			responses.ERROR(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		responses.JSON(w, http.StatusOK, invoicetaxs)
+	}(repo)
+}
+
+
 
 
 

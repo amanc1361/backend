@@ -145,3 +145,23 @@ func (r *invoiceRepository) Update(invoice models.Invoice)(models.Invoice,error)
 	}
 	return models.Invoice{},err
 }
+
+func (r *invoiceRepository) GetYearTax(companyid int,yearid int,solarfrom string,solarto string)([]modelsout.InvoiceTax,error) {
+	var err error
+	done:=make(chan bool)
+	invoicetaxs:=[]modelsout.InvoiceTax{}
+	go func (ch chan<-bool)  {
+		  
+		err=r.db.Raw("call getyeartax(?,?,?,?)",companyid,yearid,solarfrom,solarto).Take(&invoicetaxs).Error
+		if err!=nil {
+			ch<-false
+			return
+		}
+		ch<-true
+	}(done)
+
+	if channels.Ok(done) {
+		return invoicetaxs,nil
+	}
+	return []modelsout.InvoiceTax{} ,err
+} 

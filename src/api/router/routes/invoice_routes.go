@@ -42,5 +42,11 @@ var invoiceRoutes = []Route{
 		Handler: controllers.GetInvoiceNumber,
 		IsAuth:  true,
 	},
+	Route{
+		Uri:     "/invoice/taxreport",
+		Method:  http.MethodGet,
+		Handler: controllers.GetTaxYear,
+		IsAuth:  true,
+	},
 	
 }
