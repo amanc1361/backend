@@ -44,7 +44,7 @@ var invoiceRoutes = []Route{
 	},
 	Route{
 		Uri:     "/invoice/taxreport",
-		Method:  http.MethodGet,
+		Method:  http.MethodPost,
 		Handler: controllers.GetTaxYear,
 		IsAuth:  true,
 	},
