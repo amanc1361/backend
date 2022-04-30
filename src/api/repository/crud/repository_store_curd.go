@@ -199,17 +199,17 @@ func (r *repositoryStoreCRUD) GetRemObjectByStoreId(companyid int,yearid int,sto
 		Joins("store_objects on store_action_rows.store_object_id=store_objects.id").
 		Where("store_actions.company_id=? and store_actions.year_id=? and store_objects.store_id=?",companyid,yearid,storeid).
 		Group("store_objects.code,store_objects.name").
-		Habing("rem>0").Order("store_objects.code").Find(&remObjects).Error
+		Having("rem>0").Order("store_objects.code").Find(&remObjects).Error
 		if err!=nil {
 			ch<-false
 			return
 		}
 		ch<-true
-		return
 		
-	}
+		
+	}(done)
 	if channels.Ok(done) {
 		return remObjects,nil
 	}
-	return []modelsout.remObjects{},err
+	return []modelsout.Remobject{},err
 }
