@@ -62,3 +62,21 @@ func (r *repositoryWarehousingCRUD) FindAll(comapnyid int, yearid int)([]models.
 	 }
 	 return 0,err
  }
+
+ func (r *repositoryWarehousingCRUD) GetWareHousingById(int id)(models.WareHousing,error) {
+	 var err error
+	 done:=make(chan bool)
+	 warehousing:=models.WareHousing{}
+	 go func (ch chan<-bool) {
+		 err=r.db.where("id=?",id).Find(&warehouing).First.Error
+		 if err!=nil {
+			 ch<-false
+			 return 
+		 }
+		 ch<-true
+	 } (done)
+	 if channels.Ok(done) {
+		 return warehouing,nil
+	 }
+	 return models.WareHousing,err
+  }
