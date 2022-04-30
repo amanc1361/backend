@@ -46,3 +46,19 @@ func (r *repositoryWarehousingCRUD) FindAll(comapnyid int, yearid int)([]models.
    return []models.WareHousing{},err
 	
  }
+ func (r *repositoryWarehousingCRUD) Update(models.WareHousing warehouing) (int64,err) {
+	 var err error 
+	 done:=make(chan bool)
+	 go func(ch chan<-bool) {
+		 err=	err=r.db.Session(&gorm.Session{FullSaveAssociations: true}).Updates(&warehouing).Error
+		 if err!=nil {
+			 ch<-false 
+			 return 
+		 }
+		 ch<-true 
+	 }(done )
+	 if channels.Ok(done) {
+		 return 1,nil
+	 }
+	 return 0,err
+ }
