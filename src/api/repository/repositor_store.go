@@ -1,6 +1,9 @@
 package repository
 
-import "back-account/src/api/models"
+import (
+	"back-account/src/api/models"
+	"back-account/src/api/modelsout"
+)
 
 type StoreRepository interface {
 	Save(models.Store) (models.Store, error)
@@ -10,4 +13,5 @@ type StoreRepository interface {
 	Delete(int32) (int64, error)
 	GetStories(companyid int,yearid int) ([]models.StoriesRem,error)
 	GetStoreWithObject(companyid int,yearid int,storeid int,reportrtpe int) ([]models.StoreRemObjects,error)
+    GetRemObjectByStoreId(companyid int,yearid int ,storeid int)([]modelsout.Remobject,error)
 }

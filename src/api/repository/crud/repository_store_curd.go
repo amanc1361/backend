@@ -2,6 +2,7 @@ package crud
 
 import (
 	"back-account/src/api/models"
+	"back-account/src/api/modelsout"
 	"back-account/src/api/utils/channels"
 	"time"
 
@@ -185,4 +186,30 @@ func(r *repositoryStoreCRUD) GetStoreWithObject(companyid int,yearid int,storeid
 	 }
 	 return []models.StoreRemObjects{},err
 
+}
+
+func (r *repositoryStoreCRUD) GetRemObjectByStoreId(companyid int,yearid int,storeid int)([]modelsout.Remobject,error) {
+	var err error 
+	done:=make(chan bool) 
+	remObjects:=[]modelsout.Remobject{}
+	go func (ch chan<-bool) {
+		err=r.db.Table("store_actions").
+		Select("store_objects.code,store_objects.name, sum(countin)-sum(countout) as rem").
+		Joins("store_action_rows on store_actions.id=store_action_rows.store_action_id").
+		Joins("store_objects on store_action_rows.store_object_id=store_objects.id").
+		Where("store_actions.company_id=? and store_actions.year_id=? and store_objects.store_id=?",companyid,yearid,storeid).
+		Group("store_objects.code,store_objects.name").
+		Habing("rem>0").Order("store_objects.code").Find(&remObjects).Error
+		if err!=nil {
+			ch<-false
+			return
+		}
+		ch<-true
+		return
+		
+	}
+	if channels.Ok(done) {
+		return remObjects,nil
+	}
+	return []modelsout.remObjects{},err
 }
