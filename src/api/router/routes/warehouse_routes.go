@@ -12,5 +12,17 @@ var wareHouseRoute = []Route{
 		Handler: controllers.GetWareHousings,
 		IsAuth:  true,
 	},
+	{
+		Uri:     "/warehouse/{id}",
+		Method:  http.MethodGet,
+		Handler: controllers.GetWareHousings,
+		IsAuth:  true,
+	},
+	{
+		Uri:     "/warehouse",
+		Method:  http.MethodPost,
+		Handler: controllers.GetWareHousings,
+		IsAuth:  true,
+	},
 
 }
