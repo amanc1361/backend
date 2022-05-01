@@ -11,7 +11,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
-
 	"github.com/gorilla/mux"
 )
 
