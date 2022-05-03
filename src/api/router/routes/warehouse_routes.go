@@ -30,5 +30,11 @@ var wareHouseRoute = []Route{
 		Handler: controllers.GetWareHousings,
 		IsAuth:  true,
 	},
+	{
+		Uri:     "/warehouse/{id}",
+		Method:  http.MethodDelete,
+		Handler: controllers.GetWareHousings,
+		IsAuth:  true,
+	},
 
 }
