@@ -41,7 +41,7 @@ func Load() []Route {
 	routes=  append(routes, costcenterRoutes...)
 	routes=  append(routes, invoiceRoutes...)
 	routes=append(routes, accountRoutes...)
-
+    routes=append(routes, wareHouseRoute...)
 	return routes
 }
 
