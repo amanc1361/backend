@@ -195,8 +195,8 @@ func (r *repositoryStoreCRUD) GetRemObjectByStoreId(companyid int,yearid int,sto
 	go func (ch chan<-bool) {
 		err=r.db.Table("store_actions").
 		Select("store_objects.code,store_objects.name, sum(countin)-sum(countout) as rem").
-		Joins("store_action_rows on store_actions.id=store_action_rows.store_action_id").
-		Joins("store_objects on store_action_rows.store_object_id=store_objects.id").
+		Joins("join store_action_rows on store_actions.id=store_action_rows.store_action_id").
+		Joins("join store_objects on store_action_rows.store_object_id=store_objects.id").
 		Where("store_actions.company_id=? and store_actions.year_id=? and store_objects.store_id=?",companyid,yearid,storeid).
 		Group("store_objects.code,store_objects.name").
 		Having("rem>0").Order("store_objects.code").Find(&remObjects).Error
