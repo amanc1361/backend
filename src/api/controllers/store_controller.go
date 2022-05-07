@@ -238,3 +238,30 @@ func GetStorewithremobject(w http.ResponseWriter, r *http.Request) {
 		responses.JSON(w, http.StatusOK, storeis)
 	}(repo)
 }
+func GetRemStoreObjectByStoreId(w http.ResponseWriter, r *http.Request) {
+	var v = r.URL.Query()
+	companyid, err := strconv.ParseUint(v.Get("companyid"), 10, 32)
+	yearid, err := strconv.ParseUint(v.Get("yearid"), 10, 32)
+	storeid, err := strconv.ParseUint(v.Get("storeid"), 10, 32)
+		
+	db, err := database.Connect()
+	sqlDB, err := db.DB()
+	defer sqlDB.Close()
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	repo := crud.NewRepositoryStoreCRUD(db)
+	
+	func(storeRepository repository.StoreRepository) {
+
+		storeis, err := storeRepository.GetRemObjectByStoreId(int(companyid), int(yearid),int(storeid))
+		if err != nil {
+			responses.ERROR(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+
+		responses.JSON(w, http.StatusOK, storeis)
+	}(repo)
+}
