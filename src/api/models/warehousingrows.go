@@ -4,8 +4,8 @@ import "gorm.io/gorm"
 
 type WareHouseingRows struct {
 	gorm.Model
-	StoreObjectCode int    `json:"store_object_code"`
-	StoreObjectName string `json:"store_object_name"`
+	Code int    `json:"code"`
+	Name string `json:"name"`
 	Rem             int    `json:"rem"`
 	Conflict        int    `json:"conflict"`
 }
