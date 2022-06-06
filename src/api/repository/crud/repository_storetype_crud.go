@@ -48,7 +48,7 @@ func (r *repositoryStoreTypeCRUD) Update(storeType models.StoreType)(int,error) 
 	}
 	return 0,err
 }
-func (r *repositoryStoreTypeCRUD) FindAll(storeid int32)([]models.StoreType,error) {
+func (r *repositoryStoreTypeCRUD) FindAll(storeid int32)([]models.StoreType,error) { 
 	var err error
 	done :=make(chan bool)
 	storetypies:=[]models.StoreType{}
@@ -64,4 +64,21 @@ func (r *repositoryStoreTypeCRUD) FindAll(storeid int32)([]models.StoreType,erro
 		 return storetypies,nil
 	}
 	return []models.StoreType{},err
+}
+func (r *repositoryStoreTypeCRUD) GetById(storetypeid int32)(models.StoreType,error) { 
+	var err error
+	done :=make(chan bool)
+	storetypie:=models.StoreType{}
+	go func(ch chan<-bool) {
+		err=r.db.Model(models.StoreType{}).Where("id",storetypeid).First(storetypie).Error
+		if err!=nil {
+			ch<-false
+			return
+		}
+		ch<-true
+	}(done)
+	if channels.Ok(done) {
+		 return storetypie,nil
+	}
+	return models.StoreType{},err
 }
