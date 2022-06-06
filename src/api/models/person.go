@@ -22,6 +22,7 @@ type Person struct {
 	BirthDate        string `json:"birth_date"`
 	BrithRegister    string `json:"birth_register"`
 	CompanyID        int    `gorm:"uniqueIndex:idx_name" json:"company_id"`
+	DetailedName string `json:"detailed_name"`
 	DetailedID       int    `json:"detailed_id"`
 	IsMarried        int    `json:"is_married"`
 	MarriedDate      string `json:"married_date"`

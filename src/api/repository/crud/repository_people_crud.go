@@ -41,12 +41,9 @@ func(r *repositoryPeopleCRUD) GetLikeName(name string,companyid int)([]models.De
 func (r *repositoryPeopleCRUD) Save(People models.Person) (models.Person, error) {
 
 	var err error
-
 	done := make(chan bool)
-
 	detailed := models.Detailed{}
-	 
-	tx := r.db.Begin()
+    tx := r.db.Begin()
 	defer func() {
 		if r := recover(); r != nil {
 			tx.Rollback()
@@ -54,11 +51,12 @@ func (r *repositoryPeopleCRUD) Save(People models.Person) (models.Person, error)
 	}()
 
 	if People.DetailedID == 0 {
-		if People.TypePeople != 2 {
-			detailed.Name = People.Name + " " + People.Family
-		} else {
-			detailed.Name = People.Name
-		}
+		// if People.TypePeople != 2 {
+		// 	detailed.Name = People.Name + " " + People.Family
+		// } else {
+		// 	detailed.Name = People.Name
+		// }
+		detailed.Name=People.DetailedName
 		detailed.CompanyId = uint(People.CompanyID)
 
 		r1 := NewRepositoryDetailedCRUD(r.db)
@@ -92,15 +90,15 @@ if channels.Ok(done) {
 func (r *repositoryPeopleCRUD) FindAll(companyid int, search string) ([]models.Person, error) {
 
 	var err error
-	Peopleis := []models.Person{}
+	People := []models.Person{}
 	done := make(chan bool)
 	var result *gorm.DB
 
 	go func(ch chan<- bool) {
 		if len(search) == 0 {
-			result = r.db.Model(&models.Person{}).Where("company_id=?", companyid).Find(&Peopleis)
+			result = r.db.Model(&models.Person{}).Where("company_id=?", companyid).Find(&People)
 		} else {
-			result = r.db.Model(&models.Person{}).Where("company_id=? and (name LIKE ? or  family like ?)", companyid, "%"+search+"%", "%"+search+"%").Find(&Peopleis)
+			result = r.db.Model(&models.Person{}).Where("company_id=? and (name LIKE ? or  family like ?)", companyid, "%"+search+"%", "%"+search+"%").Find(&People)
 		}
 		err = result.Error
 
@@ -113,7 +111,7 @@ func (r *repositoryPeopleCRUD) FindAll(companyid int, search string) ([]models.P
 	}(done)
 
 	if channels.Ok(done) {
-		return Peopleis, nil
+		return People, nil
 	}
 
 	return nil, err
