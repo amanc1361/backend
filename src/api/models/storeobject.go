@@ -47,6 +47,12 @@ type PublicStoreObject struct {
 	Tax float32 `json:"tax"`
 	ValueAdd float32 `json:"value_add"`
 	Capacity  float32 `json:"capacity"`
+	IsSale bool   `json:"is_sale"`
+	Active bool    `json:"active"`
+    LedgerId int   `json:"ledger_id"`
+	SubLedgerId int  `json:"sub_ledger_id"`
+
+
 }
 
 // StoreObjects list of StoreObject
