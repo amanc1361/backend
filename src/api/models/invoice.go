@@ -21,4 +21,5 @@ type Invoice struct {
 	CompanyId int `json:"company_id"`
 	YearId int  `json:"year_id"`
 	InvoiceRows []InvoiceRow `json:"invoice_rows"`
+	DocumentNumber int `json:"document_number"`
 }
