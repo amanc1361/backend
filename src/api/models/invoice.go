@@ -12,7 +12,7 @@ type Invoice struct {
 	InvoiceTypeId      int `json:"invoice_type_id"`
 	StoreId int `json:"store_id"`
 	SellTypeId int `json:"sell_type_id"`
-	Amount           int `json:"amount"`
+	Amount          float32 `json:"amount"`
 	Description      string `json:"description"`
 	Tax int `json:"tax"`
 	ValueAdd int `json:"value_add"`
